@@ -26,3 +26,16 @@
 *.exe
 *.out
 *.app
+
+# VS build directories
+Debug/
+Release/
+x64/
+*/Debug/
+*/Release/
+*/x64/
+
+# VS temp project files
+*.suo
+*.sdf
+*.opensdf
