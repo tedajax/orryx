@@ -1,0 +1,74 @@
+#ifndef ORRYX_VECTOR3_H
+#define ORRYX_VECTOR3_H
+
+#include "OrryxTypes.h"
+#include "OrryxMath.h"
+
+namespace orx
+{
+    class Vector2;
+
+    class Vector3
+    {
+    public:
+        Vector3();
+        Vector3(f32 x, f32 y, f32 z);
+        Vector3(const Vector3& other);
+        Vector3(const Vector2& vec, f32 z = 0.f);
+
+        Vector3& operator=(const Vector3& rhs);
+        Vector3& operator+=(const Vector3& rhs);
+        Vector3& operator-=(const Vector3& rhs);
+        Vector3& operator*=(const f32& rhs);
+        Vector3& operator/=(const f32& rhs);
+
+        bool operator==(const Vector2& rhs) const;
+        bool operator!=(const Vector2& rhs) const;
+
+        Vector3& normalize();
+        Vector3& negate();
+        f32 length() const;
+        f32 lengthSqr() const;
+        f32 dot(const Vector3& other) const;
+
+        inline f32 getX() const { return m_data[0]; }
+        inline f32 getY() const { return m_data[1]; }
+        inline f32 getZ() const { return m_data[2]; }
+
+        inline f32 setX(f32 x) { return m_data[0] = x; }
+        inline f32 setY(f32 y) { return m_data[1] = y; }
+        inline f32 setZ(f32 z) { return m_data[2] = z; }
+
+        void set(f32 x, f32 y, f32 z)
+        {
+            m_data[0] = x;
+            m_data[1] = y;
+            m_data[2] = z;
+        }
+
+        f32* unpack() { return &m_data[0]; }
+
+        static Vector3 zero() { return Vector3(0.f, 0.f, 0.f); }
+        static Vector3 one() { return Vector3(1.f, 1.f, 1.f); }
+        static Vector3 right() { return Vector3(1.f, 0.f, 0.f); }
+        static Vector3 left() { return Vector3(-1.f, 0.f, 0.f); }
+        static Vector3 up() { return Vector3(0.f, 1.f, 0.f); }
+        static Vector3 down() { return Vector3(0.f, -1.f, 0.f); }
+        static Vector3 forward() { return Vector3(0.f, 0.f, -1.f); }
+        static Vector3 back() { return Vector3(0.f, 0.f, 1.f); }
+
+        static const Vector3 ZERO;
+        static const Vector3 ONE;
+        static const Vector3 RIGHT;
+        static const Vector3 LEFT;
+        static const Vector3 UP;
+        static const Vector3 DOWN;
+        static const Vector3 FORWARD;
+        static const Vector3 BACKWARD;
+
+    private:
+        f32 m_data[3];
+    };
+}
+
+#endif

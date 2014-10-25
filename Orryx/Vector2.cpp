@@ -88,6 +88,11 @@ namespace orx
         return (getX() * getX() + getY() * getY());
     }
 
+    f32 Vector2::dot(const Vector2& other) const
+    {
+        return getX() * other.getX() + getY() * other.getY();
+    }
+
     Vector2 Vector2::normalize(const Vector2& vec)
     {
         f32 len = vec.length();

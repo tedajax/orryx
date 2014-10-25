@@ -28,22 +28,18 @@ namespace orx
         Vector2& negate();
         f32 length() const;
         f32 lengthSqr() const;
+        f32 dot(const Vector2& other) const;
         
         static Vector2 normalize(const Vector2& vec);
         static Vector2 negate(const Vector2& vec);
         static f32 length(const Vector2& vec);
-        static f32 lengthSqr(const Vector2& vec);
+        static f32 lengthSqr(const Vector2& vec);      
 
-        static Vector2 zero() { return Vector2(0.f, 0.f); }
-        static Vector2 one() { return Vector2(1.f, 1.f); }
-        static Vector2 unitX() { return Vector2(1.f, 0.f); }
-        static Vector2 unitY() { return Vector2(0.f, 1.f); }
+        inline f32 getX() const { return m_data[0]; }
+        inline f32 getY() const { return m_data[1]; }
 
-        f32 getX() const { return m_data[0]; }
-        f32 getY() const { return m_data[1]; }
-
-        f32 setX(f32 x) { return m_data[0] = x; }
-        f32 setY(f32 y) { return m_data[1] = y; }
+        inline f32 setX(f32 x) { return m_data[0] = x; }
+        inline f32 setY(f32 y) { return m_data[1] = y; }
 
         void set(f32 x, f32 y)
         {
@@ -52,6 +48,11 @@ namespace orx
         }
 
         f32* unpack() { return &m_data[0]; }
+
+        static Vector2 zero() { return Vector2(0.f, 0.f); }
+        static Vector2 one() { return Vector2(1.f, 1.f); }
+        static Vector2 unitX() { return Vector2(1.f, 0.f); }
+        static Vector2 unitY() { return Vector2(0.f, 1.f); }
 
         static const Vector2 ZERO;
         static const Vector2 ONE;
