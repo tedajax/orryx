@@ -88,9 +88,9 @@ namespace orx
         return (getX() * getX() + getY() * getY());
     }
 
-    f32 Vector2::dot(const Vector2& other) const
+    f32 Vector2::dot(const Vector2& vec) const
     {
-        return getX() * other.getX() + getY() * other.getY();
+        return getX() * vec.getX() + getY() * vec.getY();
     }
 
     Vector2 Vector2::normalize(const Vector2& vec)
@@ -112,5 +112,10 @@ namespace orx
     f32 Vector2::lengthSqr(const Vector2& vec)
     {
         return (vec.getX() * vec.getX() + vec.getY() * vec.getY());
+    }
+
+    f32 Vector2::dot(const Vector2& v1, const Vector2& v2)
+    {
+        return v1.dot(v2);
     }
 }

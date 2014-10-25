@@ -22,14 +22,22 @@ namespace orx
         Vector3& operator*=(const f32& rhs);
         Vector3& operator/=(const f32& rhs);
 
-        bool operator==(const Vector2& rhs) const;
-        bool operator!=(const Vector2& rhs) const;
+        bool operator==(const Vector3& rhs) const;
+        bool operator!=(const Vector3& rhs) const;
 
         Vector3& normalize();
         Vector3& negate();
         f32 length() const;
         f32 lengthSqr() const;
-        f32 dot(const Vector3& other) const;
+        f32 dot(const Vector3& vec) const;
+        Vector3 cross(const Vector3& vec) const;
+
+        static Vector3 normalize(const Vector3& vec);
+        static Vector3 negate(const Vector3& vec);
+        static f32 length(const Vector3& vec);
+        static f32 lengthSqr(const Vector3& vec);
+        static f32 dot(const Vector3& v1, const Vector3& v2);
+        static Vector3& cross(const Vector3& v1, const Vector3& v2);
 
         inline f32 getX() const { return m_data[0]; }
         inline f32 getY() const { return m_data[1]; }
@@ -39,12 +47,9 @@ namespace orx
         inline f32 setY(f32 y) { return m_data[1] = y; }
         inline f32 setZ(f32 z) { return m_data[2] = z; }
 
-        void set(f32 x, f32 y, f32 z)
-        {
-            m_data[0] = x;
-            m_data[1] = y;
-            m_data[2] = z;
-        }
+        void set(const Vector3& vec);
+        void set(const Vector2& vec, f32 z);
+        void set(f32 x, f32 y, f32 z);
 
         f32* unpack() { return &m_data[0]; }
 
@@ -69,6 +74,36 @@ namespace orx
     private:
         f32 m_data[3];
     };
+
+    inline Vector3 operator+(const Vector3& lhs, const Vector3& rhs)
+    {
+        return Vector3(lhs.getX() + rhs.getX(), lhs.getY() + rhs.getY(), lhs.getZ() + rhs.getZ());
+    }
+
+    inline Vector3 operator-(const Vector3& lhs, const Vector3& rhs)
+    {
+        return Vector3(lhs.getX() - rhs.getX(), lhs.getY() - rhs.getY(), lhs.getZ() - rhs.getZ());
+    }
+
+    inline Vector3 operator-(const Vector3& vec)
+    {
+        return Vector3(-vec.getX(), -vec.getY(), -vec.getZ());
+    }
+
+    inline Vector3 operator*(const Vector3& lhs, const f32& rhs)
+    {
+        return Vector3(lhs.getX() * rhs, lhs.getY() * rhs, lhs.getZ() * rhs);
+    }
+
+    inline Vector3 operator*(const f32& lhs, const Vector3& rhs)
+    {
+        return Vector3(rhs.getX() * lhs, rhs.getY() * lhs, rhs.getZ() * lhs);
+    }
+
+    inline Vector3 operator/(const Vector3& lhs, const f32& rhs)
+    {
+        return Vector3(lhs.getX() / rhs, lhs.getY() / rhs, lhs.getZ() / rhs);
+    }
 }
 
 #endif
