@@ -30,6 +30,9 @@
     <ClCompile Include="Vector3.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrryxMath.h">
@@ -47,10 +50,10 @@
     <ClInclude Include="Vector4.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix3.h">
+    <ClInclude Include="Matrix.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix4.h">
+    <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>

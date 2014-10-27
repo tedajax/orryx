@@ -21,6 +21,8 @@ namespace orx
         Vector2& operator*=(const f32& rhs);
         Vector2& operator/=(const f32& rhs);
 
+        f32 operator[](const int i) const { return m_data[i]; }
+
         bool operator==(const Vector2& rhs) const;
         bool operator!=(const Vector2& rhs) const;
 

@@ -22,11 +22,14 @@ namespace orx
         Vector3& operator*=(const f32& rhs);
         Vector3& operator/=(const f32& rhs);
 
+        f32 operator[](const int i) const { return m_data[i]; }
+
         bool operator==(const Vector3& rhs) const;
         bool operator!=(const Vector3& rhs) const;
 
         Vector3& normalize();
         Vector3& negate();
+        Vector3& clamp(const Vector3& min, const Vector3& max);
         f32 length() const;
         f32 lengthSqr() const;
         f32 dot(const Vector3& vec) const;
@@ -34,6 +37,8 @@ namespace orx
 
         static Vector3 normalize(const Vector3& vec);
         static Vector3 negate(const Vector3& vec);
+        static Vector3 clamp(const Vector3& vec, const Vector3& min, const Vector3& max);
+        static Vector3 lerp(const Vector3& start, const Vector3& end, const f32& t);
         static f32 length(const Vector3& vec);
         static f32 lengthSqr(const Vector3& vec);
         static f32 dot(const Vector3& v1, const Vector3& v2);

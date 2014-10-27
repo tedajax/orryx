@@ -83,6 +83,14 @@ namespace orx
         return -(*this);
     }
 
+    Vector3& Vector3::clamp(const Vector3& min, const Vector3& max)
+    {
+        setX(orx::clamp(getX(), min.getX(), max.getX()));
+        setY(orx::clamp(getY(), min.getY(), max.getY()));
+        setZ(orx::clamp(getZ(), min.getZ(), max.getZ()));
+        return *this;
+    }
+
     f32 Vector3::length() const
     {
         return sqrtf(lengthSqr());
@@ -105,23 +113,6 @@ namespace orx
                        getX()*vec.getY() - getY()*vec.getZ());
     }
 
-    void Vector3::set(const Vector3& vec)
-    {
-        set(vec.getX(), vec.getY(), vec.getZ());
-    }
-
-    void Vector3::set(const Vector2& vec, f32 z)
-    {
-        set(vec.getX(), vec.getY(), z);
-    }
-
-    void Vector3::set(f32 x, f32 y, f32 z)
-    {
-        m_data[0] = x;
-        m_data[1] = y;
-        m_data[2] = z;
-    }
-
     Vector3 Vector3::normalize(const Vector3& vec)
     {
         f32 len = vec.length();
@@ -131,6 +122,20 @@ namespace orx
     Vector3 Vector3::negate(const Vector3& vec)
     {
         return -vec;
+    }
+
+    Vector3 Vector3::clamp(const Vector3& vec, const Vector3& min, const Vector3& max)
+    {
+        return Vector3(orx::clamp(vec.getX(), min.getX(), max.getX()),
+                       orx::clamp(vec.getY(), min.getY(), max.getY()),
+                       orx::clamp(vec.getZ(), min.getZ(), max.getZ()));
+    }
+
+    Vector3 Vector3::lerp(const Vector3& start, const Vector3& end, const f32& t)
+    {
+        return Vector3(orx::lerp(start.getX(), end.getX(), t),
+                       orx::lerp(start.getY(), end.getY(), t),
+                       orx::lerp(start.getZ(), end.getZ(), t));
     }
 
     f32 Vector3::length(const Vector3& vec)
@@ -151,5 +156,22 @@ namespace orx
     Vector3& Vector3::cross(const Vector3& v1, const Vector3& v2)
     {
         return v1.cross(v2);
+    }
+
+    void Vector3::set(const Vector3& vec)
+    {
+        set(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    void Vector3::set(const Vector2& vec, f32 z)
+    {
+        set(vec.getX(), vec.getY(), z);
+    }
+
+    void Vector3::set(f32 x, f32 y, f32 z)
+    {
+        m_data[0] = x;
+        m_data[1] = y;
+        m_data[2] = z;
     }
 }
