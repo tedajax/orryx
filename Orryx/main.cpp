@@ -2,15 +2,24 @@
 
 #include "OrryxMath.h"
 
+#include <SDL2/SDL.h>
+
 using namespace orx;
 
 int main(int argc, char* argv[])
 {
-    Vector3 test(1.f, 0.f, 0.f);
-    Matrix rot = Matrix::fromRotateY(1.f);
-    test.transform(rot);
-    std::cout << rot.toString() << std::endl << std::endl << test.toString();
-    std::cin.get();
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window* window = SDL_CreateWindow("Orryx",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        640,
+        480,
+        SDL_WINDOW_SHOWN);
+
+    SDL_Delay(2000);
+    
+    SDL_Quit();
 
     return 0;
 }
