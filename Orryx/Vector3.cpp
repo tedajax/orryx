@@ -2,6 +2,15 @@
 
 namespace orx
 {
+    const Vector3 Vector3::ZERO = Vector3::zero();
+    const Vector3 Vector3::ONE = Vector3::one();
+    const Vector3 Vector3::RIGHT = Vector3::right();
+    const Vector3 Vector3::LEFT = Vector3::left();
+    const Vector3 Vector3::UP = Vector3::up();
+    const Vector3 Vector3::DOWN = Vector3::down();
+    const Vector3 Vector3::FORWARD = Vector3::forward();
+    const Vector3 Vector3::BACKWARD = Vector3::back();
+
     Vector3::Vector3()
     {
         set(0.f, 0.f, 0.f);
