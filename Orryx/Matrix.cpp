@@ -1,15 +1,32 @@
 #include "Matrix.h"
 
+#include <sstream>
+
 namespace orx
 {
     const Matrix Matrix::IDENTITY = Matrix::identity();
 
     Matrix::Matrix()
     {
-        Matrix(1.f, 0.f, 0.f, 0.f,
-               0.f, 1.f, 0.f, 0.f,
-               0.f, 0.f, 1.f, 0.f,
-               0.f, 0.f, 0.f, 1.f);
+        m_data[0] = 1.f;
+        m_data[1] = 0.f;
+        m_data[2] = 0.f;
+        m_data[3] = 0.f;
+
+        m_data[4] = 0.f;
+        m_data[5] = 1.f;
+        m_data[6] = 0.f;
+        m_data[7] = 0.f;
+
+        m_data[8] = 0.f;
+        m_data[9] = 0.f;
+        m_data[10] = 1.f;
+        m_data[11] = 0.f;
+
+        m_data[12] = 0.f;
+        m_data[13] = 0.f;
+        m_data[14] = 0.f;
+        m_data[15] = 1.f;
     }
 
     Matrix::Matrix(const Matrix& other)
@@ -499,5 +516,16 @@ namespace orx
         m.set(4, 4, matrix(4, 4));
 
         return m;
+    }
+
+    std::string Matrix::toString()
+    {
+        std::stringstream stream;
+        stream.precision(2);
+        stream << "| " << get(1, 1) << ",\t" << get(1, 2) << ",\t" << get(1, 3) << ",\t" << get(1, 4) << ", |\n"
+               << "| " << get(2, 1) << ",\t" << get(2, 2) << ",\t" << get(2, 3) << ",\t" << get(2, 4) << ", |\n"
+               << "| " << get(3, 1) << ",\t" << get(3, 2) << ",\t" << get(3, 3) << ",\t" << get(3, 4) << ", |\n"
+               << "| " << get(4, 1) << ",\t" << get(4, 2) << ",\t" << get(4, 3) << ",\t" << get(4, 4) << "  |\n";
+        return stream.str();
     }
 }

@@ -4,6 +4,8 @@
 #include "OrryxTypes.h"
 #include "OrryxMath.h"
 
+#include <string>
+
 namespace orx
 {
     class Vector3;
@@ -91,6 +93,8 @@ namespace orx
         }
 
         static const Matrix IDENTITY;
+
+        std::string toString();
 
     private:
         f32 m_data[16];

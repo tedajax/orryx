@@ -4,9 +4,14 @@
 #include "OrryxTypes.h"
 #include "OrryxMath.h"
 
+#include <string>
+#include <cassert>
+
 namespace orx
 {
     class Vector2;
+    class Matrix;
+    class Quaternion;
 
     class Vector3
     {
@@ -22,7 +27,11 @@ namespace orx
         Vector3& operator*=(const f32& rhs);
         Vector3& operator/=(const f32& rhs);
 
-        f32 operator[](const int i) const { return m_data[i]; }
+        f32 operator[](const int i) const
+        { 
+            assert(i >= 0 && i < 3);
+            return m_data[i];
+        }
 
         bool operator==(const Vector3& rhs) const;
         bool operator!=(const Vector3& rhs) const;
@@ -34,6 +43,8 @@ namespace orx
         f32 lengthSqr() const;
         f32 dot(const Vector3& vec) const;
         Vector3 cross(const Vector3& vec) const;
+        Vector3& transform(const Matrix& matrix);
+        Vector3& transform(const Quaternion& rotation);
 
         static Vector3 normalize(const Vector3& vec);
         static Vector3 negate(const Vector3& vec);
@@ -43,6 +54,8 @@ namespace orx
         static f32 lengthSqr(const Vector3& vec);
         static f32 dot(const Vector3& v1, const Vector3& v2);
         static Vector3& cross(const Vector3& v1, const Vector3& v2);
+        static Vector3 transform(const Vector3& position, const Matrix& matrix);
+        static Vector3 transform(const Vector3& position, const Quaternion& rotation);
 
         inline f32 getX() const { return m_data[0]; }
         inline f32 getY() const { return m_data[1]; }
@@ -75,6 +88,8 @@ namespace orx
         static const Vector3 DOWN;
         static const Vector3 FORWARD;
         static const Vector3 BACKWARD;
+
+        std::string toString();
 
     private:
         f32 m_data[3];
