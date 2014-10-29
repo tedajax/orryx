@@ -28,10 +28,9 @@
 # VS build directories
 Debug/
 Release/
-x64/
 */Debug/
 */Release/
-*/x64/
+Orryx/x64/
 
 # VS temp project files
 *.suo
