@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include "Shader.h"
+#include "Camera.h"
+
 #include <cassert>
 #include <iostream>
 #include <cstdio>
@@ -55,7 +58,7 @@ namespace orx
         if (glewResult != GLEW_OK)
         {
             fprintf(stderr, "GL Version: %s\n", glGetString(GL_VERSION));
-            std::cerr << "Glew failed to initialize: " << glewGetErrorString(glewResult) << std::endl;
+            fprintf(stderr, "GLEW failed to initialize: %s\n", glewGetErrorString(glewResult));
             return false;
         }
 
@@ -69,8 +72,39 @@ namespace orx
 
         m_isRunning = true;
 
+        Camera camera;
+
+        static const GLfloat vertices[9] = {
+            -1.f, -1.f, -1.f,
+            1.f, -1.f, -1.f,
+            0.f, 1.f, -1.f
+        };
+
+        camera.move(0, 0, -10);
+        camera.lookAt(0, 0, 0);
+        Matrix projection = camera.getProjection();
+        std::cout << projection.toString();
+        Matrix view = camera.getView();
+        std::cout << std::endl << std::endl << view.toString();
+        Matrix model = Matrix::IDENTITY;
+        Matrix modelViewProjection = projection * view * model;
+
+        GLuint vertexArrayId;
+        glGenVertexArrays(1, &vertexArrayId);
+        glBindVertexArray(vertexArrayId);
+
+        GLuint vertexBuffer;
+        glGenBuffers(1, &vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        Shader shader("basic-vert.glsl", "basic-frag.glsl");
+
+        GLuint matrixUniform = shader.getUniform("MVP");
+        glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, modelViewProjection.unpack());
+
         SDL_Event event;
-        glClearColor(1.f, 0.f, 0.f, 1.f);
+        glClearColor(0.f, 0.f, 0.f, 1.f);
         while (m_isRunning)
         {
             while (SDL_PollEvent(&event))
@@ -78,8 +112,26 @@ namespace orx
                 handleEvent(event);
             }
 
-            update();
-            render();
+            /*update();
+            render();*/
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+           
+            shader.use();
+
+            glEnableVertexAttribArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+            glVertexAttribPointer(0,
+                                  3,
+                                  GL_FLOAT,
+                                  GL_FALSE,
+                                  0,
+                                  (void *)0);
+
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            glDisableVertexAttribArray(0);
+
+            SDL_GL_SwapWindow(m_window.raw());
         }
 
         return 0;
@@ -123,8 +175,6 @@ namespace orx
 
     void Application::render()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        SDL_GL_SwapWindow(m_window.raw());
+        
     }
 }

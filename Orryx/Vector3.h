@@ -53,7 +53,7 @@ namespace orx
         static f32 length(const Vector3& vec);
         static f32 lengthSqr(const Vector3& vec);
         static f32 dot(const Vector3& v1, const Vector3& v2);
-        static Vector3& cross(const Vector3& v1, const Vector3& v2);
+        static Vector3 cross(const Vector3& v1, const Vector3& v2);
         static Vector3 transform(const Vector3& position, const Matrix& matrix);
         static Vector3 transform(const Vector3& position, const Quaternion& rotation);
 
@@ -89,7 +89,7 @@ namespace orx
         static const Vector3 FORWARD;
         static const Vector3 BACKWARD;
 
-        std::string toString();
+        std::string toString() const;
 
     private:
         f32 m_data[3];

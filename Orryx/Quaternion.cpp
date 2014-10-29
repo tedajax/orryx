@@ -145,7 +145,7 @@ namespace orx
     }
 
     Quaternion Quaternion::inverse(const Quaternion& quaternion)
-    { 
+    {
         Quaternion result(quaternion);
         f32 invLenSqr = 1.f / result.lengthSqr();
         result.setX(-result.getX() * invLenSqr);
@@ -173,7 +173,7 @@ namespace orx
         f32 halfYaw = 0.5f * yaw;
         f32 halfPitch = 0.5f * pitch;
         f32 halfRoll = 0.5f * roll;
-        
+
         f32 yawSin = sinf(halfYaw);
         f32 yawCos = sinf(halfYaw);
 
@@ -184,9 +184,9 @@ namespace orx
         f32 rollCos = cosf(halfRoll);
 
         return Quaternion(yawCos * pitchSin * rollCos + yawSin * pitchCos * rollSin,
-                          yawSin * pitchCos * rollCos + yawCos * pitchSin * rollSin,
-                          yawCos * pitchCos * rollSin + yawSin * pitchSin * rollCos,
-                          yawCos * pitchCos * rollCos + yawSin * pitchSin * rollSin);
+            yawSin * pitchCos * rollCos + yawCos * pitchSin * rollSin,
+            yawCos * pitchCos * rollSin + yawSin * pitchSin * rollCos,
+            yawCos * pitchCos * rollCos + yawSin * pitchSin * rollSin);
     }
 
     Quaternion Quaternion::fromRotationMatrix(const Matrix& matrix)
@@ -234,6 +234,26 @@ namespace orx
         quaternion.setY((matrix(3, 2) + matrix(2, 3)) * sumSqrt);
         quaternion.setW((matrix(1, 2) + matrix(2, 1)) * sumSqrt);
         return quaternion;
+    }
+
+    Quaternion Quaternion::fromLookAt(const Vector3& source, const Vector3 target)
+    {
+        Vector3 forward = Vector3::normalize(target - source);
+        f32 dot = Vector3::dot(Vector3::FORWARD, forward);
+
+        if (fabs(dot - -1.f) < 0.000001f)
+        {
+            return Quaternion(Vector3::UP, 3.1415926535897932f);
+        }
+
+        if (fabs(dot - 1.f) < 0.000001f)
+        {
+            return Quaternion::IDENTITY;
+        }
+
+        f32 angle = acosf(dot);
+        Vector3 axis = Vector3::normalize(Vector3::cross(Vector3::FORWARD, forward));
+        return fromAxisAngle(axis, angle);
     }
 
     f32 Quaternion::dot(const Quaternion& q1, const Quaternion& q2)

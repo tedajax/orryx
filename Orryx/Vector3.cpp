@@ -121,7 +121,7 @@ namespace orx
     {
         return Vector3(getY()*vec.getZ() - getZ()*vec.getY(),
                        getX()*vec.getZ() - getZ()*vec.getX(),
-                       getX()*vec.getY() - getY()*vec.getZ());
+                       getX()*vec.getY() - getY()*vec.getX());
     }
 
     Vector3& Vector3::transform(const Matrix& matrix)
@@ -176,7 +176,7 @@ namespace orx
         return v1.dot(v2);
     }
 
-    Vector3& Vector3::cross(const Vector3& v1, const Vector3& v2)
+    Vector3 Vector3::cross(const Vector3& v1, const Vector3& v2)
     {
         return v1.cross(v2);
     }
@@ -225,7 +225,7 @@ namespace orx
         m_data[2] = z;
     }
 
-    std::string Vector3::toString()
+    std::string Vector3::toString() const
     {
         std::stringstream stream;
         stream.precision(2);
