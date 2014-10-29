@@ -2,6 +2,7 @@
 
 #include "OrryxMath.h"
 #include "Window.h"
+#include "Application.h"
 
 #include <SDL2/SDL.h>
 
@@ -9,24 +10,23 @@ using namespace orx;
 
 int main(int argc, char* argv[])
 {
-    SDL_Init(SDL_INIT_VIDEO);
-
-    WindowConfig config;
-    config.m_title = "Orryx";
-    config.m_position.m_x = SDL_WINDOWPOS_UNDEFINED;
-    config.m_position.m_y = SDL_WINDOWPOS_UNDEFINED;
-    config.m_dimensions.m_x = 800;
-    config.m_dimensions.m_y = 600;
-    config.m_flags = SDL_WINDOW_SHOWN;
+    WindowConfig windowConfig;
+    windowConfig.m_title = "Orryx";
+    windowConfig.m_position.m_x = SDL_WINDOWPOS_UNDEFINED;
+    windowConfig.m_position.m_y = SDL_WINDOWPOS_UNDEFINED;
+    windowConfig.m_dimensions.m_x = 800;
+    windowConfig.m_dimensions.m_y = 600;
+    windowConfig.m_flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
     
-    Window window(config);
-    window.create();
+    Application application({ "Orryx", windowConfig });
+    bool result = application.initialize();
 
-    SDL_Delay(2000);
+    if (!result)
+    {
+        std::cout << "Application failed to initialize!\n";
+        std::cin.get();
+        return -1;
+    }
 
-    window.terminate();
-    
-    SDL_Quit();
-
-    return 0;
+    return application.run(argc, argv);
 }

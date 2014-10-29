@@ -37,6 +37,8 @@ namespace orx
         void create();
         void terminate();
 
+        SDL_Window* raw() { return m_window; }
+
     private:
         WindowConfig m_config;
         SDL_Window* m_window;

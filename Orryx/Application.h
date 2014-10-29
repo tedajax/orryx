@@ -1,0 +1,41 @@
+#ifndef ORRYX_APPLICATION_H
+#define ORRYX_APPLICATION_H
+
+#include "OrryxTypes.h"
+#include "Window.h"
+
+#include <SDL2/SDL.h>
+
+namespace orx
+{
+    struct ApplicationConfig
+    {
+        char* m_appName;
+        WindowConfig m_windowConfig;
+    };
+
+    class Application
+    {
+    public:
+        Application(ApplicationConfig config);
+        ~Application();
+
+        bool initialize();
+        int run(int argc, char* argv[]);
+
+    private:
+        Window m_window;
+        SDL_GLContext m_context;
+        bool m_isRunning;
+        bool m_isInitialized;
+        char* m_appName;
+
+        void handleEvent(SDL_Event event);
+        void handleKeyDown(SDL_KeyboardEvent event);
+        void handleKeyUp(SDL_KeyboardEvent event);
+        void update();
+        void render();
+    };
+}
+
+#endif
