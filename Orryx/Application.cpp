@@ -80,9 +80,6 @@ namespace orx
             0.f, 1.f, 0.f
         };
 
-        camera.move(4, 3, 3);
-        camera.lookAt(0, 0, 0);
-
         f32 angle = 0.f;
         f32 radius = 5.f;
 
@@ -114,13 +111,12 @@ namespace orx
            
             shader.use();
 
-            camera.setPosition(cosf(angle) * radius, 0.f, sinf(angle) * radius);
-            angle += 0.01f;
+            angle += 0.05f;
 
             Matrix projection = camera.getProjection();
             Matrix view = camera.getView();
             Matrix model = Matrix::IDENTITY;
-            Matrix modelViewProjection = projection * view * model;
+            Matrix modelViewProjection = model * view * projection;
 
             glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, modelViewProjection.unpack());
 

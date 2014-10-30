@@ -296,25 +296,25 @@ namespace orx
     Matrix Matrix::createLookAt(const Vector3& position, const Vector3& target, const Vector3& up)
     {
         Matrix m;
-        Vector3 v1 = Vector3::normalize(target - position);
+        Vector3 v1 = Vector3::normalize(position - target);
         Vector3 v2 = Vector3::normalize(Vector3::cross(v1, up));
         Vector3 v3 = Vector3::cross(v2, v1);
 
         m.set(1, 1, v2.getX());
         m.set(1, 2, v3.getX());
-        m.set(1, 3, -v1.getX());
+        m.set(1, 3, v1.getX());
 
         m.set(2, 1, v2.getY());
         m.set(2, 2, v3.getY());
-        m.set(2, 3, -v1.getY());
+        m.set(2, 3, v1.getY());
 
         m.set(3, 1, v2.getZ());
         m.set(3, 2, v3.getZ());
-        m.set(3, 3, -v1.getZ());
+        m.set(3, 3, v1.getZ());
 
         m.set(4, 1, -Vector3::dot(v2, position));
         m.set(4, 2, -Vector3::dot(v3, position));
-        m.set(4, 3, Vector3::dot(v1, position));
+        m.set(4, 3, -Vector3::dot(v1, position));
 
         return m;
     }
