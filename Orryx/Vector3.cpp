@@ -120,7 +120,7 @@ namespace orx
     Vector3 Vector3::cross(const Vector3& vec) const
     {
         return Vector3(getY()*vec.getZ() - getZ()*vec.getY(),
-                       getX()*vec.getZ() - getZ()*vec.getX(),
+                       getZ()*vec.getX() - getX()*vec.getZ(),
                        getX()*vec.getY() - getY()*vec.getX());
     }
 

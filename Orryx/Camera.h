@@ -18,6 +18,8 @@ namespace orx
         Camera();
         ~Camera();
 
+        void setPosition(const Vector3& position) { m_position = position; }
+        void setPosition(f32 x, f32 y, f32 z) { setPosition(Vector3(x, y, z)); }
         void move(const Vector3& amount);
         void move(f32 x, f32 y, f32 z) { move(Vector3(x, y, z)); }
 

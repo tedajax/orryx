@@ -30,9 +30,15 @@ namespace orx
         Matrix& operator/=(const f32& rhs);
 
         f32 operator[](const int i) const { return m_data[i]; }
+        f32& operator[](const int i) { return m_data[i]; }
 
         // row, then col [1..4]
         f32 operator()(const int row, const int col) const
+        {
+            return m_data[(row - 1) * 4 + (col - 1)];
+        }
+
+        f32& operator()(const int row, const int col)
         {
             return m_data[(row - 1) * 4 + (col - 1)];
         }
@@ -75,7 +81,7 @@ namespace orx
         static f32 mulRowCol(const Matrix& lhs, const Matrix& rhs, const int row, const int col)
         {
             f32 result = 0.f;
-            for (int i = 0; i < 4; ++i)
+            for (int i = 1; i <= 4; ++i)
             {
                 result += lhs(row, i) * rhs(i, col);
             }
@@ -122,13 +128,27 @@ namespace orx
     inline Matrix operator*(const Matrix& lhs, const Matrix& rhs)
     {
         Matrix m;
-        for (int row = 1; row <= 4; ++row)
-        {
-            for (int col = 1; col <= 4; ++col)
-            {
-                m.set(row, col, Matrix::mulRowCol(lhs, rhs, row, col));
-            }
-        }
+
+        m(1, 1) = rhs(1, 1) * lhs(1, 1) + rhs(1, 2) * lhs(2, 1) + rhs(1, 3) * lhs(3, 1) + rhs(1, 4) * lhs(4, 1);
+        m(1, 2) = rhs(1, 1) * lhs(1, 2) + rhs(1, 2) * lhs(2, 2) + rhs(1, 3) * lhs(3, 2) + rhs(1, 4) * lhs(4, 2);
+        m(1, 3) = rhs(1, 1) * lhs(1, 3) + rhs(1, 2) * lhs(2, 3) + rhs(1, 3) * lhs(3, 3) + rhs(1, 4) * lhs(4, 3);
+        m(1, 4) = rhs(1, 1) * lhs(1, 4) + rhs(1, 2) * lhs(2, 4) + rhs(1, 3) * lhs(3, 4) + rhs(1, 4) * lhs(4, 4);
+
+        m(2, 1) = rhs(2, 1) * lhs(1, 1) + rhs(2, 2) * lhs(2, 1) + rhs(2, 3) * lhs(3, 1) + rhs(2, 4) * lhs(4, 1);
+        m(2, 2) = rhs(2, 1) * lhs(1, 2) + rhs(2, 2) * lhs(2, 2) + rhs(2, 3) * lhs(3, 2) + rhs(2, 4) * lhs(4, 2);
+        m(2, 3) = rhs(2, 1) * lhs(1, 3) + rhs(2, 2) * lhs(2, 3) + rhs(2, 3) * lhs(3, 3) + rhs(2, 4) * lhs(4, 3);
+        m(2, 4) = rhs(2, 1) * lhs(1, 4) + rhs(2, 2) * lhs(2, 4) + rhs(2, 3) * lhs(3, 4) + rhs(2, 4) * lhs(4, 4);
+
+        m(3, 1) = rhs(3, 1) * lhs(1, 1) + rhs(3, 2) * lhs(2, 1) + rhs(3, 3) * lhs(3, 1) + rhs(3, 4) * lhs(4, 1);
+        m(3, 2) = rhs(3, 1) * lhs(1, 2) + rhs(3, 2) * lhs(2, 2) + rhs(3, 3) * lhs(3, 2) + rhs(3, 4) * lhs(4, 2);
+        m(3, 3) = rhs(3, 1) * lhs(1, 3) + rhs(3, 2) * lhs(2, 3) + rhs(3, 3) * lhs(3, 3) + rhs(3, 4) * lhs(4, 3);
+        m(3, 4) = rhs(3, 1) * lhs(1, 4) + rhs(3, 2) * lhs(2, 4) + rhs(3, 3) * lhs(3, 4) + rhs(3, 4) * lhs(4, 4);
+
+        m(4, 1) = rhs(4, 1) * lhs(1, 1) + rhs(4, 2) * lhs(2, 1) + rhs(4, 3) * lhs(3, 1) + rhs(4, 4) * lhs(4, 1);
+        m(4, 2) = rhs(4, 1) * lhs(1, 2) + rhs(4, 2) * lhs(2, 2) + rhs(4, 3) * lhs(3, 2) + rhs(4, 4) * lhs(4, 2);
+        m(4, 3) = rhs(4, 1) * lhs(1, 3) + rhs(4, 2) * lhs(2, 3) + rhs(4, 3) * lhs(3, 3) + rhs(4, 4) * lhs(4, 3);
+        m(4, 4) = rhs(4, 1) * lhs(1, 4) + rhs(4, 2) * lhs(2, 4) + rhs(4, 3) * lhs(3, 4) + rhs(4, 4) * lhs(4, 4);
+
         return m;
     }
 

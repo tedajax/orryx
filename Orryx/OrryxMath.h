@@ -17,6 +17,20 @@
 
 namespace orx
 {
+    static const f32 PI = 3.14159265f;
+    static const f32 PI_OVER_2 = 1.57079633f;
+    static const f32 TWO_PI = 6.28318531f;
+
+    inline f32 radians(f32 degrees)
+    {
+        return degrees * (PI / 180.f);
+    }
+
+    inline f32 degrees(f32 radians)
+    {
+        return radians * (180.f / PI);
+    }
+
     inline bool isApproximatelyEqual(const f32& lhs, const f32& rhs)
     {
         return fabs(rhs - lhs) < ORX_EPSILON;
@@ -40,6 +54,8 @@ namespace orx
     {
         return val * val;
     }
+
+    
 }
 
 #endif

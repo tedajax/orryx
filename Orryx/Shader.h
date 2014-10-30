@@ -16,7 +16,7 @@ namespace orx
         void create(const char* vertFile, const char* fragFile);
         void destroy();
 
-        GLuint getUniform(const char* name);
+        GLint getUniform(const char* name);
 
         void use();
 

@@ -42,12 +42,12 @@ namespace orx
         glDeleteProgram(m_program);
     }
 
-    GLuint Shader::getUniform(const char* name)
+    GLint Shader::getUniform(const char* name)
     {
         auto uniformSearch = m_uniforms.find(std::string(name));
         if (uniformSearch == m_uniforms.end())
         {
-            GLuint uniform = glGetUniformLocation(m_program, name);
+            GLint uniform = glGetUniformLocation(m_program, name);
             m_uniforms[std::string(name)] = uniform;
             return uniform;
         }

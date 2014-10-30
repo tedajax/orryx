@@ -75,19 +75,16 @@ namespace orx
         Camera camera;
 
         static const GLfloat vertices[9] = {
-            -1.f, -1.f, -1.f,
-            1.f, -1.f, -1.f,
-            0.f, 1.f, -1.f
+            -1.f, -1.f, 0.f,
+            1.f, -1.f, 0.f,
+            0.f, 1.f, 0.f
         };
 
-        camera.move(0, 0, -10);
+        camera.move(4, 3, 3);
         camera.lookAt(0, 0, 0);
-        Matrix projection = camera.getProjection();
-        std::cout << projection.toString();
-        Matrix view = camera.getView();
-        std::cout << std::endl << std::endl << view.toString();
-        Matrix model = Matrix::IDENTITY;
-        Matrix modelViewProjection = projection * view * model;
+
+        f32 angle = 0.f;
+        f32 radius = 5.f;
 
         GLuint vertexArrayId;
         glGenVertexArrays(1, &vertexArrayId);
@@ -100,8 +97,7 @@ namespace orx
 
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
 
-        GLuint matrixUniform = shader.getUniform("MVP");
-        glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, modelViewProjection.unpack());
+        GLint matrixUniform = shader.getUniform("MVP");
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -117,6 +113,16 @@ namespace orx
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
            
             shader.use();
+
+            camera.setPosition(cosf(angle) * radius, 0.f, sinf(angle) * radius);
+            angle += 0.01f;
+
+            Matrix projection = camera.getProjection();
+            Matrix view = camera.getView();
+            Matrix model = Matrix::IDENTITY;
+            Matrix modelViewProjection = projection * view * model;
+
+            glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, modelViewProjection.unpack());
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

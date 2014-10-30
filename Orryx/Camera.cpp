@@ -39,9 +39,7 @@ namespace orx
     Matrix Camera::getView()
     {
         Vector3 target = Vector3::transform(Vector3::FORWARD, m_rotation);
-        std::cout << Vector3::FORWARD.toString() << " " << target.toString() << std::endl;
         Vector3 up = Vector3::transform(Vector3::UP, m_rotation);
-        std::cout << up.toString() << std::endl;
         Matrix m = Matrix::createLookAt(m_position, target, up);
         return m;
     }
@@ -66,6 +64,6 @@ namespace orx
 
     Matrix Camera::getPerspective()
     {
-        return Matrix::createPerspective(m_fov, m_aspect, m_near, m_far);
+        return Matrix::createPerspective(orx::radians(m_fov), m_aspect, m_near, m_far);
     }
 }
