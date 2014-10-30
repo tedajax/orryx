@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 
+#include <DirectXMath.h>
+
 namespace orx
 {
     Application::Application(ApplicationConfig config)
@@ -113,12 +115,23 @@ namespace orx
 
             angle += 0.05f;
 
+            camera.move(0, 0, 0.01f);
+            camera.lookAt(0, 0, 0);
             Matrix projection = camera.getProjection();
             Matrix view = camera.getView();
             Matrix model = Matrix::IDENTITY;
+            DirectX::XMMATRIX xProjection = DirectX::XMMatrixPerspectiveFovLH(75.f, 4.f / 3.f, 0.1f, 1000.f);
+            DirectX::XMVECTOR xeye = DirectX::XMVectorSet(0.f, 0.f, -10.f, 1.f);
+            DirectX::XMVECTOR xlook = DirectX::XMVectorSet(0.f, 0.f, 0.f, 1.f);
+            DirectX::XMVECTOR xup = DirectX::XMVectorSet(0.f, 1.f, 0.f, 1.f);;
+            DirectX::XMMATRIX xView = DirectX::XMMatrixLookAtLH(xeye, xlook, xup);
+            DirectX::XMMATRIX xMVP = xView * xProjection;
             Matrix modelViewProjection = model * view * projection;
 
-            glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, modelViewProjection.unpack());
+            DirectX::XMFLOAT4X4 fMVP;
+            DirectX::XMStoreFloat4x4(&fMVP, xMVP);
+
+            glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, &fMVP.m[0][0]);
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
