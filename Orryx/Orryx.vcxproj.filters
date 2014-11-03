@@ -78,6 +78,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
+    <ClCompile Include="OrryxLogging.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrryxMath.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="OrryxLogging.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

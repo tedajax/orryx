@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "Camera.h"
 
+#include "OrryxLogging.h"
+
 #include <cassert>
 #include <iostream>
 #include <cstdio>
@@ -33,11 +35,16 @@ namespace orx
 
     bool Application::initialize()
     {
+        Logging::LogInfo("Application", "Initializing application.");
+
+        Logging::LogInfo("Application", "Initializing SDL.");
         if (SDL_Init(SDL_INIT_VIDEO) > 0)
         {
+            Logging::LogPanic("Application", "Failed to initialize SDL!");
             return false;
         }
 
+        Logging::LogInfo("Application", "Initializing window.");
         m_window.create();
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
@@ -47,20 +54,23 @@ namespace orx
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
 
+        Logging::LogInfo("Application", "Initializing GL context.");
         m_context = SDL_GL_CreateContext(m_window.raw());
         if (!m_context)
         {
-            fprintf(stderr, "Failed to create context: %s\n", SDL_GetError());
+            Logging::LogPanicFormat("Application", "Failed to initialize GL context: %s", SDL_GetError());
+            return false;
         }
 
         SDL_GL_MakeCurrent(m_window.raw(), m_context);
 
+        Logging::LogInfo("Application", "Initializing GLEW.");
         glewExperimental = GL_TRUE;
         GLenum glewResult = glewInit();
         if (glewResult != GLEW_OK)
         {
-            fprintf(stderr, "GL Version: %s\n", glGetString(GL_VERSION));
-            fprintf(stderr, "GLEW failed to initialize: %s\n", glewGetErrorString(glewResult));
+            Logging::LogPanicFormat("Application", "GLEW failed to initialize: %s", glewGetErrorString(glewResult));
+            Logging::LogPanicFormat("Application", "GL Version: %s", glGetString(GL_VERSION));
             return false;
         }
 
@@ -123,7 +133,7 @@ namespace orx
             DirectX::XMMATRIX xProjection = DirectX::XMMatrixPerspectiveFovLH(75.f, 4.f / 3.f, 0.1f, 1000.f);
             DirectX::XMVECTOR xeye = DirectX::XMVectorSet(0.f, 0.f, -10.f, 1.f);
             DirectX::XMVECTOR xlook = DirectX::XMVectorSet(0.f, 0.f, 0.f, 1.f);
-            DirectX::XMVECTOR xup = DirectX::XMVectorSet(0.f, 1.f, 0.f, 1.f);;
+            DirectX::XMVECTOR xup = DirectX::XMVectorSet(0.f, 1.f, 0.f, 1.f);
             DirectX::XMMATRIX xView = DirectX::XMMatrixLookAtLH(xeye, xlook, xup);
             DirectX::XMMATRIX xMVP = xView * xProjection;
             Matrix modelViewProjection = model * view * projection;
