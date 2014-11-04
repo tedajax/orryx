@@ -8,33 +8,15 @@ namespace orx
 
     Matrix::Matrix()
     {
-        m_data[0] = 1.f;
-        m_data[1] = 0.f;
-        m_data[2] = 0.f;
-        m_data[3] = 0.f;
-
-        m_data[4] = 0.f;
-        m_data[5] = 1.f;
-        m_data[6] = 0.f;
-        m_data[7] = 0.f;
-
-        m_data[8] = 0.f;
-        m_data[9] = 0.f;
-        m_data[10] = 1.f;
-        m_data[11] = 0.f;
-
-        m_data[12] = 0.f;
-        m_data[13] = 0.f;
-        m_data[14] = 0.f;
-        m_data[15] = 1.f;
+        m_matrix = XMMATRIX(1.f, 0.f, 0.f, 0.f,
+                            0.f, 1.f, 0.f, 0.f,
+                            0.f, 0.f, 1.f, 0.f,
+                            0.f, 0.f, 0.f, 1.f);
     }
 
     Matrix::Matrix(const Matrix& other)
     {
-        for (int i = 0; i < 16; ++i)
-        {
-            m_data[i] = other[i];
-        }
+        m_matrix = XMMATRIX(&other.getFloat4x4().m[0][0]);
     }
 
     Matrix::Matrix(f32 m11, f32 m12, f32 m13, f32 m14,
@@ -42,95 +24,71 @@ namespace orx
                    f32 m31, f32 m32, f32 m33, f32 m34,
                    f32 m41, f32 m42, f32 m43, f32 m44)
     {
-        m_data[0]  = m11;
-        m_data[1]  = m12;
-        m_data[2]  = m13;
-        m_data[3]  = m14;
+        m_matrix = XMMATRIX(m11, m12, m13, m14,
+                            m21, m22, m23, m24,
+                            m31, m32, m33, m34,
+                            m41, m42, m43, m44);
+    }
 
-        m_data[4]  = m21;
-        m_data[5]  = m22;
-        m_data[6]  = m23;
-        m_data[7]  = m24;
-
-        m_data[8]  = m31;
-        m_data[9]  = m32;
-        m_data[10] = m33;
-        m_data[11] = m34;
-
-        m_data[12] = m41;
-        m_data[13] = m42;
-        m_data[14] = m43;
-        m_data[15] = m44;
+    Matrix::Matrix(const XMMATRIX& xmmatrix)
+    {
+        m_matrix = xmmatrix;
     }
 
     Matrix& Matrix::operator=(const Matrix& rhs)
     {
-        for (int i = 0; i < 16; ++i)
-        {
-            m_data[i] = rhs[i];
-        }
+        m_matrix = rhs.getXMMatrix();
         return *this;
     }
 
     Matrix& Matrix::operator+=(const Matrix& rhs)
     {
-        for (int i = 0; i < 16; ++i)
-        {
-            m_data[i] += rhs[i];
-        }
+        m_matrix += rhs.getXMMatrix();
         return *this;
     }
 
     Matrix& Matrix::operator-=(const Matrix& rhs)
     {
-        for (int i = 0; i < 16; ++i)
-        {
-            m_data[i] -= rhs[i];
-        }
+        m_matrix -= rhs.getXMMatrix();
         return *this;
     }
 
     Matrix& Matrix::operator*=(const Matrix& rhs)
     {
-        Matrix m(*this);
-        *this = m * rhs;
+        m_matrix *= rhs.getXMMatrix();
         return *this;
     }
 
     Matrix& Matrix::operator*=(const f32& rhs)
     {
-        for (int i = 0; i < 16; ++i)
+        for (int i = 0; i < 4; ++i)
         {
-            m_data[i] *= rhs;
-        }
-        return *this;
-    }
-
-    Matrix& Matrix::operator/=(const Matrix& rhs)
-    {
-        for (int i = 0; i < 16; ++i)
-        {
-            m_data[i] /= rhs[i];
+            m_matrix.r[i] *= rhs;
         }
         return *this;
     }
 
     Matrix& Matrix::operator/=(const f32& rhs)
     {
-        for (int i = 0; i < 16; ++i)
+        for (int i = 0; i < 4; ++i)
         {
-            m_data[i] /= rhs;
+            m_matrix.r[i] /= rhs;
         }
         return *this;
     }
 
     bool Matrix::operator==(const Matrix& rhs) const
     {
-        for (int i = 0; i < 16; ++i)
+        XMFLOAT4X4 lhsf4x4 = getFloat4x4();
+        XMFLOAT4X4 rhsf4x4 = rhs.getFloat4x4();
+        for (int i = 0; i < 4; ++i)
         {
-            if (!isApproximatelyEqual(m_data[i], rhs[i]))
+            for (int j = 0; j < 4; ++j)
             {
-                return false;
+                if (!isApproximatelyEqual(lhsf4x4.m[i][j], rhsf4x4.m[i][j]))
+                {
+                    return false;
+                }
             }
         }
 
@@ -142,53 +100,28 @@ namespace orx
         return !(*this == rhs);
     }
 
-    void Matrix::decompose(Vector3& translation, Quaternion& rotation, Vector3& scale)
+    void Matrix::decompose(Vector& translation, Quaternion& rotation, Vector& scale)
     {
         //todo
     }
 
     f32 Matrix::determinant()
     {
-        auto m = m_data;
-        return
-            m[12] * m[9] * m[6] * m[3] - m[8] * m[13] * m[6] * m[3] -
-            m[12] * m[5] * m[10] * m[3] + m[4] * m[13] * m[10] * m[3] +
-            m[8] * m[5] * m[14] * m[3] - m[4] * m[9] * m[14] * m[3] -
-            m[12] * m[9] * m[2] * m[7] + m[8] * m[13] * m[2] * m[7] +
-            m[12] * m[1] * m[10] * m[7] - m[0] * m[13] * m[10] * m[7] -
-            m[8] * m[1] * m[14] * m[7] + m[0] * m[9] * m[14] * m[7] +
-            m[12] * m[5] * m[2] * m[11] - m[4] * m[13] * m[2] * m[11] -
-            m[12] * m[1] * m[6] * m[11] + m[0] * m[13] * m[6] * m[11] +
-            m[4] * m[1] * m[14] * m[11] - m[0] * m[5] * m[14] * m[11] -
-            m[8] * m[5] * m[2] * m[15] + m[4] * m[9] * m[2] * m[15] +
-            m[8] * m[1] * m[6] * m[15] - m[0] * m[9] * m[6] * m[15] -
-            m[4] * m[1] * m[10] * m[15] + m[0] * m[5] * m[10] * m[15];
+        XMVECTOR determinantVector = XMMatrixDeterminant(m_matrix);
+        return XMVectorGetByIndex(determinantVector, 0);
     }
 
     Matrix Matrix::negate(const Matrix& matrix)
     {
-        Matrix m;
-        for (int i = 0; i < 16; ++i)
-        {
-            m.set(i, -matrix[i]);
-        }
-        return m;
+        return Matrix(matrix * -1.f);
     }
 
     Matrix Matrix::transpose(const Matrix& matrix)
     {
-        Matrix m;
-        for (int row = 1; row <= 4; ++row)
-        {
-            for (int col = 1; col <= 4; ++col)
-            {
-                m.set(col, row, matrix(row, col));
-            }
-        }
-        return m;
+        return Matrix(XMMatrixTranspose(matrix.getXMMatrix()));
     }
 
-    Matrix Matrix::fromRotateAxisAngle(const Vector3& axis, const f32 angle)
+    Matrix Matrix::fromRotateAxisAngle(const Vector& axis, const f32 angle)
     {
         Matrix m;
         f32 x = axis.getX();
@@ -293,12 +226,12 @@ namespace orx
         return m;
     }
     
-    Matrix Matrix::createLookAt(const Vector3& position, const Vector3& target, const Vector3& up)
+    Matrix Matrix::createLookAt(const Vector& position, const Vector& target, const Vector& up)
     {
         Matrix m;
-        Vector3 v1 = Vector3::normalize(position - target);
-        Vector3 v2 = Vector3::normalize(Vector3::cross(v1, up));
-        Vector3 v3 = Vector3::cross(v2, v1);
+        Vector v1 = Vector::normalize(position - target);
+        Vector v2 = Vector::normalize(Vector::cross(v1, up));
+        Vector v3 = Vector::cross(v2, v1);
 
         m.set(1, 1, v2.getX());
         m.set(1, 2, v3.getX());
@@ -312,9 +245,9 @@ namespace orx
         m.set(3, 2, v3.getZ());
         m.set(3, 3, v1.getZ());
 
-        m.set(4, 1, -Vector3::dot(v2, position));
-        m.set(4, 2, -Vector3::dot(v3, position));
-        m.set(4, 3, -Vector3::dot(v1, position));
+        m.set(4, 1, -Vector::dot(v2, position));
+        m.set(4, 2, -Vector::dot(v3, position));
+        m.set(4, 3, -Vector::dot(v1, position));
 
         return m;
     }
@@ -342,7 +275,7 @@ namespace orx
         return m;
     }
     
-    Matrix Matrix::fromScale(const Vector3& scale)
+    Matrix Matrix::fromScale(const Vector& scale)
     {
         Matrix m;
         m.set(1, 1, scale.getX());
@@ -360,7 +293,7 @@ namespace orx
         return m;
     }
     
-    Matrix Matrix::fromTranslation(const Vector3& position)
+    Matrix Matrix::fromTranslation(const Vector& position)
     {
         Matrix m;
         m.set(4, 1, position.getX());
@@ -378,12 +311,12 @@ namespace orx
         return m;
     }
     
-    Matrix Matrix::world(const Vector3& position, const Vector3& forward, const Vector3& up)
+    Matrix Matrix::world(const Vector& position, const Vector& forward, const Vector& up)
     {
         Matrix m;
-        Vector3 v1 = Vector3::normalize(-forward);
-        Vector3 v2 = Vector3::normalize(Vector3::cross(up, v1));
-        Vector3 v3 = Vector3::cross(v1, v2);
+        Vector v1 = Vector::normalize(-forward);
+        Vector v2 = Vector::normalize(Vector::cross(up, v1));
+        Vector v3 = Vector::cross(v1, v2);
 
         m.set(1, 1, v2.getX());
         m.set(1, 2, v2.getY());

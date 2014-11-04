@@ -4,10 +4,14 @@
 #include "OrryxMath.h"
 #include "OrryxTypes.h"
 
+#include <DirectXMath.h>
+
+using namespace DirectX;
+
 namespace orx
 {
     class Matrix;
-    class Vector3;
+    class Vector;
 
     class Quaternion
     {
@@ -15,14 +19,15 @@ namespace orx
         Quaternion();
         Quaternion(const Quaternion& other);
         Quaternion(f32 x, f32 y, f32 z, f32 w);
-        Quaternion(Vector3 vector, f32 scalar);
+        Quaternion(Vector xmvector, f32 scalar);
+        Quaternion(const XMVECTOR& xmvector);
 
         Quaternion& operator=(const Quaternion& rhs);
         Quaternion& operator+=(const Quaternion& rhs);
         Quaternion& operator-=(const Quaternion& rhs);
         Quaternion& operator*=(const Quaternion& rhs);
         Quaternion& operator*=(const f32 rhs);
-        Quaternion& operator/=(const Quaternion& rhs);
+        Quaternion& operator/=(const f32 rhs);
 
         bool operator==(const Quaternion& rhs);
         bool operator!=(const Quaternion& rhs);
@@ -35,51 +40,110 @@ namespace orx
         static Quaternion normalize(const Quaternion& quaternion);
         static Quaternion conjugate(const Quaternion& quaternion);
         static Quaternion inverse(const Quaternion& quaternion);
-        static Quaternion fromAxisAngle(const Vector3& axis, f32 angle);
+        static Quaternion fromAxisAngle(const Vector& axis, f32 angle);
         static Quaternion fromYawPitchRoll(const f32 yaw, const f32 pitch, const f32 roll);
         static Quaternion fromRotationMatrix(const Matrix& matrix);
-        static Quaternion fromLookAt(const Vector3& source, const Vector3 target);
+        static Quaternion fromLookAt(const Vector& source, const Vector target);
         static f32 dot(const Quaternion& q1, const Quaternion& q2);
         static Quaternion slerp(const Quaternion& q1, const Quaternion& q2, f32 t);
-        static Quaternion lerp(const Quaternion& q1, const Quaternion& q2, f32 t);
         static Quaternion negate(const Quaternion& quaternion);
 
-        f32 getX() const { return m_data[0]; }
-        f32 getY() const { return m_data[1]; }
-        f32 getZ() const { return m_data[2]; }
-        f32 getW() const { return m_data[3]; }
+        f32 operator[](const int i) const
+        {
+            assert(i >= 0 && i < 4);
+            XMFLOAT4 fvec;
+            XMStoreFloat4(&fvec, m_vector);
+            switch (i)
+            {
+            default:
+            case 0:
+                return fvec.x;
 
-        f32 setX(f32 x) { return m_data[0] = x; }
-        f32 setY(f32 y) { return m_data[1] = y; }
-        f32 setZ(f32 z) { return m_data[2] = z; }
-        f32 setW(f32 w) { return m_data[3] = w; }
+            case 1:
+                return fvec.y;
+
+            case 2:
+                return fvec.z;
+
+            case 3:
+                return fvec.w;
+            }
+        }
+
+        f32 get(const int i) const
+        {
+            return (*this)[i];
+        }
+
+        f32 set(const int i, f32 value)
+        {
+            assert(i >= 0 && i < 4);
+
+            XMFLOAT4 fvec;
+            XMStoreFloat4(&fvec, m_vector);
+
+            switch (i)
+            {
+            default:
+            case 0:
+                fvec.x = value;
+                break;
+
+            case 1:
+                fvec.y = value;
+                break;
+
+            case 2:
+                fvec.z = value;
+                break;
+
+            case 3:
+                fvec.w = value;
+                break;
+            }
+
+            m_vector = XMLoadFloat4(&fvec);
+
+            return value;
+        }
+
+        XMVECTOR getXMVector() const { return m_vector; }
+
+        f32 getX() const { return get(0); }
+        f32 getY() const { return get(1); }
+        f32 getZ() const { return get(2); }
+        f32 getW() const { return get(3); }
+
+        f32 setX(f32 x) { return set(0, x); }
+        f32 setY(f32 y) { return set(1, y); }
+        f32 setZ(f32 z) { return set(2, z); }
+        f32 setW(f32 w) { return set(3, w); }
 
         void set(f32 x = 0.f, f32 y = 0.f, f32 z = 0.f, f32 w = 0.f)
         {
-            setX(x); setY(y); setZ(z); setW(w);
+            XMFLOAT4 fvec;
+            fvec.x = x;
+            fvec.y = y;
+            fvec.z = z;
+            fvec.w = w;
+            m_vector = XMLoadFloat4(&fvec);
         }
 
         static Quaternion identity() { return Quaternion(0.f, 0.f, 0.f, 1.f); }
         static const Quaternion IDENTITY;
 
     private:
-        f32 m_data[4];
+        XMVECTOR m_vector;
     };
 
     inline Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs)
     {
-        return Quaternion(lhs.getX() + rhs.getX(),
-                          lhs.getY() + rhs.getY(),
-                          lhs.getZ() + rhs.getZ(),
-                          lhs.getW() + rhs.getW());
+        return Quaternion(XMVectorAdd(lhs.getXMVector(), rhs.getXMVector()));
     }
 
     inline Quaternion operator-(const Quaternion& lhs, const Quaternion& rhs)
     {
-        return Quaternion(lhs.getX() - rhs.getX(),
-                          lhs.getY() - rhs.getY(),
-                          lhs.getZ() - rhs.getZ(),
-                          lhs.getW() - rhs.getW());
+        return Quaternion(XMVectorSubtract(lhs.getXMVector(), rhs.getXMVector()));
     }
 
     inline Quaternion operator-(const Quaternion& quaternion)
@@ -89,43 +153,17 @@ namespace orx
 
     inline Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
     {
-        Quaternion quaternion;
-        f32 x1 = lhs.getX();
-        f32 y1 = lhs.getY();
-        f32 z1 = lhs.getZ();
-        f32 w1 = lhs.getW();
-
-        f32 x2 = rhs.getX();
-        f32 y2 = rhs.getY();
-        f32 z2 = rhs.getZ();
-        f32 w2 = rhs.getW();
-
-        f32 yzDiff = (y1 * z2) - (z1 * y2);
-        f32 xzDiff = (z1 * x2) - (x1 * z2);
-        f32 xyDiff = (x1 * y2) - (y1 * x2);
-        f32 prodSum = (x1 * x2) + (y1 * y2) + (z1 * z2);
-
-        quaternion.setX((x1 * w2) + (x2 * w1) + yzDiff);
-        quaternion.setY((y1 * w2) + (y2 * w1) + xzDiff);
-        quaternion.setZ((z1 * w2) + (z2 * w1) + xyDiff);
-        quaternion.setW(w1 * w2 - prodSum);
-        return quaternion;
+        return Quaternion(XMQuaternionMultiply(lhs.getXMVector(), rhs.getXMVector()));
     }
 
     inline Quaternion operator*(const Quaternion& lhs, const f32 rhs)
     {
-        return Quaternion(lhs.getX() * rhs,
-                          lhs.getY() * rhs,
-                          lhs.getZ() * rhs,
-                          lhs.getW() * rhs);
+        return Quaternion(XMVectorScale(lhs.getXMVector(), rhs));
     }
 
-    inline Quaternion operator/(const Quaternion& lhs, const Quaternion& rhs)
+    inline Quaternion operator/(const Quaternion& lhs, const f32 rhs)
     {
-        return Quaternion(lhs.getX() / rhs.getX(),
-                          lhs.getY() / rhs.getY(),
-                          lhs.getZ() / rhs.getZ(),
-                          lhs.getW() / rhs.getW());
+        return lhs * (1.f / rhs);
     }
 }
 

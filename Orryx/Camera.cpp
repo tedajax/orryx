@@ -20,17 +20,17 @@ namespace orx
 
     }
 
-    void Camera::move(const Vector3& amount)
+    void Camera::move(const Vector& amount)
     {
         m_position += amount;
     }
 
-    void Camera::lookAt(const Vector3& target)
+    void Camera::lookAt(const Vector& target)
     {
         m_rotation = Quaternion::fromLookAt(m_position, target);
     }
 
-    void Camera::rotateAxisAngle(const Vector3& axis, f32 angle)
+    void Camera::rotateAxisAngle(const Vector& axis, f32 angle)
     {
         Quaternion rotation = Quaternion::fromAxisAngle(axis, angle);
         m_rotation *= rotation;
@@ -38,8 +38,8 @@ namespace orx
 
     Matrix Camera::getView()
     {
-        Vector3 target = Vector3::transform(Vector3::FORWARD, m_rotation);
-        Vector3 up = Vector3::transform(Vector3::UP, m_rotation);
+        Vector target = Vector::transform(Vector::FORWARD, m_rotation);
+        Vector up = Vector::transform(Vector::UP, m_rotation);
         Matrix m = Matrix::createLookAt(m_position, target, up);
         return m;
     }

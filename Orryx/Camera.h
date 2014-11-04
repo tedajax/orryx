@@ -18,18 +18,18 @@ namespace orx
         Camera();
         ~Camera();
 
-        void setPosition(const Vector3& position) { m_position = position; }
-        void setPosition(f32 x, f32 y, f32 z) { setPosition(Vector3(x, y, z)); }
-        void move(const Vector3& amount);
-        void move(f32 x, f32 y, f32 z) { move(Vector3(x, y, z)); }
+        void setPosition(const Vector& position) { m_position = position; }
+        void setPosition(f32 x, f32 y, f32 z) { setPosition(Vector(x, y, z)); }
+        void move(const Vector& amount);
+        void move(f32 x, f32 y, f32 z) { move(Vector(x, y, z)); }
 
-        void lookAt(const Vector3& target);
-        void lookAt(f32 x, f32 y, f32 z) { lookAt(Vector3(x, y, z)); }
+        void lookAt(const Vector& target);
+        void lookAt(f32 x, f32 y, f32 z) { lookAt(Vector(x, y, z)); }
 
-        void rotateAxisAngle(const Vector3& axis, f32 angle);
-        void rotatePitch(f32 angle) { rotateAxisAngle(Vector3::RIGHT, angle); }
-        void rotateYaw(f32 angle) { rotateAxisAngle(Vector3::UP, angle); }
-        void rotateRoll(f32 angle) { rotateAxisAngle(Vector3::FORWARD, angle); }
+        void rotateAxisAngle(const Vector& axis, f32 angle);
+        void rotatePitch(f32 angle) { rotateAxisAngle(Vector::RIGHT, angle); }
+        void rotateYaw(f32 angle) { rotateAxisAngle(Vector::UP, angle); }
+        void rotateRoll(f32 angle) { rotateAxisAngle(Vector::FORWARD, angle); }
 
         Matrix getView();
         Matrix getProjection();
@@ -43,7 +43,7 @@ namespace orx
         f32 m_near;
         f32 m_far;
 
-        Vector3 m_position;
+        Vector m_position;
         Quaternion m_rotation;
         CameraType m_type;
     };
