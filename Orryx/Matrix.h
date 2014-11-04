@@ -73,7 +73,6 @@ namespace orx
         static Matrix fromScale(const f32 scale);
         static Matrix fromTranslation(const Vector& position);
         static Matrix fromTranslation(const f32 x, const f32 y, const f32 z);
-        static Matrix world(const Vector& position, const Vector& forward, const Vector& up);
         static Matrix invert(const Matrix& matrix);
         static Matrix transform(const Matrix& matrix, const Quaternion& rotation);
 
@@ -120,17 +119,17 @@ namespace orx
 
     inline Matrix operator*(const Matrix& lhs, const Matrix& rhs)
     {
-        return Matrix(lhs * rhs);
+        return Matrix(lhs.getXMMatrix() * rhs.getXMMatrix());
     }
 
     inline Matrix operator*(const Matrix& lhs, const f32& rhs)
     {
-        return Matrix(lhs * rhs);
+        return Matrix(lhs.getXMMatrix() * rhs);
     }
 
     inline Matrix operator/(const Matrix& lhs, const f32& rhs)
     {
-        return Matrix(lhs / rhs);
+        return Matrix(lhs.getXMMatrix() / rhs);
     }
 }
 
