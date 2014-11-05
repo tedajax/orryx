@@ -84,6 +84,8 @@ namespace orx
         m_isRunning = true;
 
         Camera camera;
+        camera.move(0.f, 5.f, 5.f);
+        camera.lookAt(0, 0, 0);
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -129,12 +131,13 @@ namespace orx
         mesh.setVertices(vertices, 24);
         mesh.setIndices(indices, 36);
 
-        Transform transform;
-
         f32 angle = 0.f;
         f32 radius = 5.f;
         
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -150,18 +153,30 @@ namespace orx
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
            
             shader.use();
-
-            angle += 0.05f;
-
-            camera.move(0, 0, 0.01f);
-            camera.lookAt(0, 0, 0);
-
-            transform.m_rotation *= Quaternion::fromYawPitchRoll(0.01f, 0.02f, 0.f);
             
+            camera.move(0.1f, 0.f, 0.1f);
+            camera.lookAt(camera.getPosition() + Vector(0.f, -5.f, -5.f));
+
             MeshRenderer meshRenderer;
             meshRenderer.setMesh(&mesh);
             meshRenderer.setShader(&shader);
-            meshRenderer.render(transform, camera);
+            meshRenderer.setCamera(&camera);
+            meshRenderer.perFrameSetup();
+            const int width = 100;
+            const int height = 100;
+            for (int i = 0; i < width; ++i)
+            {
+                for (int j = 0; j < height; ++j)
+                {
+                    Transform transform;
+                    transform.m_position = Vector((i - (width / 2)) * 2.f,
+                        0.f,
+                        (j - (height / 2)) * 2.f);
+                    meshRenderer.perObjectSetup(transform);
+                    meshRenderer.render(transform);
+                }
+            }
+            
 
             SDL_GL_SwapWindow(m_window.raw());
         }

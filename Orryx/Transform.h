@@ -30,14 +30,7 @@ namespace orx
             Matrix translation = Matrix::fromTranslation(m_position);
             Matrix rotation = Matrix::fromQuaternion(m_rotation);
             Matrix scale = Matrix::fromScale(m_scale);
-
-            Logging::LogInfo("translation", translation.toString().c_str());
-            Logging::LogInfo("rotation", rotation.toString().c_str());
-            Logging::LogInfo("scale", scale.toString().c_str());
-
-            Matrix result = scale * rotation * translation;
-            Logging::LogInfo("result", result.toString().c_str());
-            return result;
+            return scale * rotation * translation;
         }
 
         // TODO these probably shouldn't be public but I don't feel like building

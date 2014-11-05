@@ -9,15 +9,14 @@ namespace orx
     Shader::Shader()
         : m_vertex(0),
         m_fragment(0),
-        m_program(0)
+        m_program(0),
+        m_uniformCount(0)
     {
 
     }
 
     Shader::Shader(const char* vertFile, const char* fragFile)
-        : m_vertex(0),
-        m_fragment(0),
-        m_program(0)
+        : Shader()
     {
         create(vertFile, fragFile);
     }
@@ -44,17 +43,26 @@ namespace orx
 
     GLint Shader::getUniform(const char* name)
     {
-        auto uniformSearch = m_uniforms.find(std::string(name));
-        if (uniformSearch == m_uniforms.end())
+        for (u32 i = 0; i < m_uniformCount; ++i)
         {
-            GLint uniform = glGetUniformLocation(m_program, name);
-            m_uniforms[std::string(name)] = uniform;
-            return uniform;
+            if (strcmp(name, m_uniforms[i].m_name) == 0)
+            {
+                return m_uniforms[i].m_uniform;
+            }
         }
-        else
+
+        GLint uniform = glGetUniformLocation(m_program, name);
+        if (uniform)
         {
-            return uniformSearch->second;
+            UniformPair uniformPair;
+            size_t len = strlen(name);
+            uniformPair.m_name = (char*)calloc(len + 1, sizeof(char));
+            strncpy_s(uniformPair.m_name, len+1, name, 100);
+            uniformPair.m_uniform = uniform;
+            m_uniforms[m_uniformCount++] = uniformPair;
         }
+
+        return uniform;
     }
 
     void Shader::use()

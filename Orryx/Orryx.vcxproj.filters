@@ -134,6 +134,9 @@
     <ClInclude Include="MeshRenderer.h">
       <Filter>Header Files\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic-vert.glsl">

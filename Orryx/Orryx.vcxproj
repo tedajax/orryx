@@ -179,6 +179,7 @@
     <ClInclude Include="OrryxMath.h" />
     <ClInclude Include="OrryxTypes.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vector.h" />

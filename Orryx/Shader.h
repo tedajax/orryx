@@ -2,7 +2,8 @@
 #define ORRYX_SHADER_H
 
 #include <GL/glew.h>
-#include <map>
+
+#include "OrryxTypes.h"
 
 namespace orx
 {
@@ -29,7 +30,16 @@ namespace orx
         GLuint m_fragment;
         GLuint m_program;
 
-        std::map<std::string, GLuint> m_uniforms;
+        struct UniformPair
+        {
+            char* m_name;
+            GLuint m_uniform;
+        };
+
+        enum { MAX_UNIFORMS = 20 };
+
+        UniformPair m_uniforms[MAX_UNIFORMS];
+        u32 m_uniformCount;
     };
 }
 

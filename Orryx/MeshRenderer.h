@@ -18,12 +18,16 @@ namespace orx
 
         void setMesh(Mesh* mesh) { m_mesh = mesh; }
         void setShader(Shader* shader) { m_shader = shader; }
+        void setCamera(Camera* camera) { m_camera = camera; }
 
-        void render(const Transform& transform, const Camera& camera);
+        void perFrameSetup();
+        void perObjectSetup(const Transform& transform);
+        void render(const Transform& transform);
 
     private:
         Mesh* m_mesh;
         Shader* m_shader;
+        Camera* m_camera;
     };
 }
 

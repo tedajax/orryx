@@ -2,6 +2,8 @@
 
 out vec4 color;
 
+varying vec3 vPos;
+
 void main() {
-	color = vec4(1, 0.2, 0.8, 1);
+	color = vec4(vPos.x, vPos.y, vPos.z, 1);
 }

@@ -34,6 +34,10 @@ namespace orx
         Matrix getView() const;
         Matrix getProjection() const;
 
+        const Vector& getPosition() const { return m_position; }
+        const Quaternion& getRotation() const { return m_rotation; }
+        const CameraType getType() const { return m_type; }
+
     private:
         Matrix getOrthographic() const;
         Matrix getPerspective() const;

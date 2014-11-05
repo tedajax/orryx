@@ -20,6 +20,7 @@ namespace orx
 
         void setVertices(const f32* vertices, u32 count);
         void setIndices(const u16* indices, u32 count);
+
         void bindVertexBuffer();
         void bindIndexBuffer();
         void enableAttribArrays();
