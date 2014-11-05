@@ -14,7 +14,7 @@ namespace orx
 
         Matrix projection = camera.getProjection();
         Matrix view = camera.getView();
-        Matrix world = Matrix::IDENTITY;  //transform.getWorldMatrix();
+        Matrix world = transform.getWorldMatrix();
 
         DirectX::XMFLOAT4X4 fWorld;
         XMStoreFloat4x4(&fWorld, world.getXMMatrix());
@@ -23,12 +23,12 @@ namespace orx
         GL::uniformMatrix4fv(m_shader->getUniform("view"), view);
         GL::uniformMatrix4fv(m_shader->getUniform("projection"), projection);
 
-        m_mesh->bindVertexBuffer();
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+        m_mesh->bindVertexBuffer();        
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
         m_mesh->bindIndexBuffer();
-        glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh->getIndicies().size(), GL_UNSIGNED_SHORT, &m_mesh->getIndicies()[0]);
+        glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh->getIndicies().size(), GL_UNSIGNED_SHORT, nullptr);
 
         glDisableVertexAttribArray(0);
     }

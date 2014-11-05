@@ -119,7 +119,7 @@ namespace orx
 
     Quaternion Quaternion::fromYawPitchRoll(const f32 yaw, const f32 pitch, const f32 roll)
     {
-        return Quaternion(XMQuaternionRotationRollPitchYaw(yaw, pitch, roll));
+        return Quaternion(XMQuaternionRotationRollPitchYaw(pitch, yaw, roll));
     }
 
     Quaternion Quaternion::fromRotationMatrix(const Matrix& matrix)
