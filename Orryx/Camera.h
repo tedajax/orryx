@@ -31,12 +31,12 @@ namespace orx
         void rotateYaw(f32 angle) { rotateAxisAngle(Vector::UP, angle); }
         void rotateRoll(f32 angle) { rotateAxisAngle(Vector::FORWARD, angle); }
 
-        Matrix getView();
-        Matrix getProjection();
+        Matrix getView() const;
+        Matrix getProjection() const;
 
     private:
-        Matrix getOrthographic();
-        Matrix getPerspective();
+        Matrix getOrthographic() const;
+        Matrix getPerspective() const;
 
         f32 m_fov;
         f32 m_aspect;

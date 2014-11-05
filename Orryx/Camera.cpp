@@ -36,7 +36,7 @@ namespace orx
         m_rotation *= rotation;
     }
 
-    Matrix Camera::getView()
+    Matrix Camera::getView() const
     {
         Vector target = Vector::transform(Vector::FORWARD, m_rotation);
         Vector up = Vector::transform(Vector::UP, m_rotation);
@@ -44,7 +44,7 @@ namespace orx
         return m;
     }
 
-    Matrix Camera::getProjection()
+    Matrix Camera::getProjection() const
     {
         switch (m_type)
         {
@@ -57,12 +57,12 @@ namespace orx
         }
     }
 
-    Matrix Camera::getOrthographic()
+    Matrix Camera::getOrthographic() const
     {
         return Matrix::createOrthographic(2.f, 2.f, m_near, m_far);
     }
 
-    Matrix Camera::getPerspective()
+    Matrix Camera::getPerspective() const 
     {
         return Matrix::createPerspective(orx::radians(m_fov), m_aspect, m_near, m_far);
     }

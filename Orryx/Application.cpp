@@ -4,14 +4,13 @@
 #include "Camera.h"
 
 #include "OrryxLogging.h"
+#include "OrryxGL.h"
+#include "Mesh.h"
+#include "MeshRenderer.h"
 
 #include <cassert>
 #include <iostream>
 #include <cstdio>
-
-#include <GL/glew.h>
-
-#include <DirectXMath.h>
 
 namespace orx
 {
@@ -86,27 +85,29 @@ namespace orx
 
         Camera camera;
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
         static const GLfloat vertices[9] = {
             -1.f, -1.f, 0.f,
             1.f, -1.f, 0.f,
             0.f, 1.f, 0.f
         };
 
+        static const GLushort indices[3] = {
+            0, 2, 1
+        };
+
+        Mesh mesh;
+        mesh.setVertices(vertices, 9);
+        mesh.setIndices(indices, 3);
+
+        Transform transform;
+
         f32 angle = 0.f;
         f32 radius = 5.f;
-
-        GLuint vertexArrayId;
-        glGenVertexArrays(1, &vertexArrayId);
-        glBindVertexArray(vertexArrayId);
-
-        GLuint vertexBuffer;
-        glGenBuffers(1, &vertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+        
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
-
-        GLint matrixUniform = shader.getUniform("MVP");
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -127,27 +128,11 @@ namespace orx
 
             camera.move(0, 0, 0.01f);
             camera.lookAt(0, 0, 0);
-            Matrix projection = camera.getProjection();
-            Matrix view = camera.getView();
-            Matrix model = Matrix::fromRotateY(angle);
-            Matrix modelViewProjection = model * view * projection;
-
-            DirectX::XMFLOAT4X4 fMVP = modelViewProjection.getFloat4x4();
-
-            glUniformMatrix4fv(matrixUniform, 1, GL_FALSE, &fMVP.m[0][0]);
-
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-            glVertexAttribPointer(0,
-                                  3,
-                                  GL_FLOAT,
-                                  GL_FALSE,
-                                  0,
-                                  (void *)0);
-
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-
-            glDisableVertexAttribArray(0);
+            
+            MeshRenderer meshRenderer;
+            meshRenderer.setMesh(&mesh);
+            meshRenderer.setShader(&shader);
+            meshRenderer.render(transform, camera);
 
             SDL_GL_SwapWindow(m_window.raw());
         }

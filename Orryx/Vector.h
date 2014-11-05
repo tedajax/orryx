@@ -15,12 +15,19 @@ namespace orx
 {
     class Matrix;
     class Quaternion;
+    
+    struct Vector2 { f32 x, y; };
+    struct Vector3 { f32 x, y, z; };
+    struct Vector4 { f32 x, y, z, w; };
 
     class Vector
     {
     public:
         Vector();
         Vector(f32 x, f32 y, f32 z, f32 w = 0.f);
+        Vector(Vector2 vec, f32 z = 0.f, f32 w = 0.f);
+        Vector(Vector3 vec, f32 w = 0.f);
+        Vector(Vector4 vec);
         Vector(const XMVECTOR& xmvector);
         Vector(const Vector& other);
 
