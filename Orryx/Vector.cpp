@@ -27,12 +27,12 @@ namespace orx
         set(x, y, z, w);
     }
 
-    Vector::Vector(Vector2 vec, f32 z = 0.f, f32 w = 0.f)
+    Vector::Vector(Vector2 vec, f32 z /* = 0.f */, f32 w /* = 0.f */)
     {
         set(vec.x, vec.y, z, w);
     }
 
-    Vector::Vector(Vector3 vec, f32 w = 0.f)
+    Vector::Vector(Vector3 vec, f32 w /* = 0.f */)
     {
         set(vec.x, vec.y, vec.z, w);
     }
