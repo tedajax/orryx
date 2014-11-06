@@ -162,6 +162,7 @@
     <ClCompile Include="OrryxFile.cpp" />
     <ClCompile Include="OrryxGL.cpp" />
     <ClCompile Include="OrryxLogging.cpp" />
+    <ClCompile Include="OrryxTime.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Vector.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="OrryxGL.h" />
     <ClInclude Include="OrryxLogging.h" />
     <ClInclude Include="OrryxMath.h" />
+    <ClInclude Include="OrryxTime.h" />
     <ClInclude Include="OrryxTypes.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Renderable.h" />

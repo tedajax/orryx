@@ -2,6 +2,7 @@
 #define ORRYX_APPLICATION_H
 
 #include "OrryxTypes.h"
+#include "OrryxTime.h"
 #include "Window.h"
 
 #include <SDL2/SDL.h>
@@ -29,6 +30,8 @@ namespace orx
         bool m_isRunning;
         bool m_isInitialized;
         char* m_appName;
+
+        Time m_time;
 
         void handleEvent(SDL_Event event);
         void handleKeyDown(SDL_KeyboardEvent event);

@@ -90,15 +90,17 @@ namespace orx
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
+        const f32 size = 1.f;
+        const f32 halfSize = size / 2.f;
         static const GLfloat vertices[24] = {
-            -1.f,  1.f,  1.f, // 0
-             1.f,  1.f,  1.f, // 1
-            -1.f, -1.f,  1.f, // 2
-             1.f, -1.f,  1.f, // 3
-            -1.f,  1.f, -1.f, // 4
-             1.f,  1.f, -1.f, // 5
-            -1.f, -1.f, -1.f, // 6
-             1.f, -1.f, -1.f, // 7
+            -halfSize,  halfSize,  halfSize, // 0
+             halfSize,  halfSize,  halfSize, // 1
+            -halfSize, -halfSize,  halfSize, // 2
+             halfSize, -halfSize,  halfSize, // 3
+            -halfSize,  halfSize, -halfSize, // 4
+             halfSize,  halfSize, -halfSize, // 5
+            -halfSize, -halfSize, -halfSize, // 6
+             halfSize, -halfSize, -halfSize, // 7
         };
 
         static const GLushort indices[36] = {
@@ -141,11 +143,24 @@ namespace orx
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
+
+        int width = 25;
+        int height = 25;
+
+        f32 time = 0.f;
+
         while (m_isRunning)
         {
             while (SDL_PollEvent(&event))
             {
                 handleEvent(event);
+            }
+
+            m_time.update();
+
+            if (m_time.secondElapsed())
+            {
+                Logging::LogInfoFormat("FPS", "%d", m_time.fps());
             }
 
             /*update();
@@ -154,7 +169,7 @@ namespace orx
            
             shader.use();
             
-            camera.move(0.1f, 0.f, 0.1f);
+            //camera.move(0.f, 0.01f, 0.f);
             camera.lookAt(camera.getPosition() + Vector(0.f, -5.f, -5.f));
 
             MeshRenderer meshRenderer;
@@ -162,15 +177,16 @@ namespace orx
             meshRenderer.setShader(&shader);
             meshRenderer.setCamera(&camera);
             meshRenderer.perFrameSetup();
-            const int width = 100;
-            const int height = 100;
+
+            time += m_time.delta();
+
             for (int i = 0; i < width; ++i)
             {
                 for (int j = 0; j < height; ++j)
                 {
                     Transform transform;
                     transform.m_position = Vector((i - (width / 2)) * 2.f,
-                        0.f,
+                        sinf(time - i) * 0.5f * cosf(time - j),
                         (j - (height / 2)) * 2.f);
                     meshRenderer.perObjectSetup(transform);
                     meshRenderer.render(transform);

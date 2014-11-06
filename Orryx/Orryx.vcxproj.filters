@@ -87,6 +87,9 @@
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>Source Files\Render</Filter>
     </ClCompile>
+    <ClCompile Include="OrryxTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrryxMath.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Renderable.h">
       <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="OrryxTime.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
