@@ -156,6 +156,11 @@ namespace orx
                 handleEvent(event);
             }
 
+            if (m_input.getKeyDown(SDL_SCANCODE_ESCAPE))
+            {
+                m_isRunning = false;
+            }
+
             m_time.update();
 
             if (m_time.secondElapsed())
@@ -169,6 +174,16 @@ namespace orx
            
             shader.use();
             
+            if (m_input.getKey(SDL_SCANCODE_A))
+            {
+                camera.move(-0.1f, 0.f, 0.f);
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_D))
+            {
+                camera.move(0.1f, 0.f, 0.f);
+            }
+
             //camera.move(0.f, 0.01f, 0.f);
             camera.lookAt(camera.getPosition() + Vector(0.f, -5.f, -5.f));
 
@@ -193,6 +208,7 @@ namespace orx
                 }
             }
             
+            m_input.update();
 
             SDL_GL_SwapWindow(m_window.raw());
         }
@@ -209,21 +225,15 @@ namespace orx
             break;
 
         case SDL_KEYDOWN:
-            handleKeyDown(event.key);
-            break;
-
         case SDL_KEYUP:
-            handleKeyUp(event.key);
+            handleKeyDown(event.key);
             break;
         }
     }
 
     void Application::handleKeyDown(SDL_KeyboardEvent event)
     {
-        if (event.keysym.sym == SDLK_ESCAPE)
-        {
-            m_isRunning = false;
-        }
+        m_input.onKeyEvent(event);
     }
 
     void Application::handleKeyUp(SDL_KeyboardEvent event)

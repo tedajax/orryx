@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "OrryxLogging.h"
+
 #include <iostream>
 
 namespace orx
@@ -28,6 +30,7 @@ namespace orx
     void Camera::lookAt(const Vector& target)
     {
         m_rotation = Quaternion::fromLookAt(m_position, target);
+        Logging::LogInfo("rotation", m_rotation.toString().c_str());
     }
 
     void Camera::rotateAxisAngle(const Vector& axis, f32 angle)

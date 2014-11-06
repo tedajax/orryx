@@ -4,6 +4,7 @@
 #include "OrryxTypes.h"
 #include "OrryxTime.h"
 #include "Window.h"
+#include "Input.h"
 
 #include <SDL2/SDL.h>
 
@@ -32,6 +33,7 @@ namespace orx
         char* m_appName;
 
         Time m_time;
+        Input m_input;
 
         void handleEvent(SDL_Event event);
         void handleKeyDown(SDL_KeyboardEvent event);

@@ -90,6 +90,9 @@
     <ClCompile Include="OrryxTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrryxMath.h">
@@ -141,6 +144,9 @@
       <Filter>Header Files\Render</Filter>
     </ClInclude>
     <ClInclude Include="OrryxTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -114,7 +114,7 @@ namespace orx
 
     Quaternion Quaternion::fromAxisAngle(const Vector& axis, f32 angle)
     {
-        return Quaternion(XMQuaternionRotationAxis(axis.getXMVector(), angle));
+        return Quaternion(XMQuaternionRotationNormal(axis.getXMVector(), angle));
     }
 
     Quaternion Quaternion::fromYawPitchRoll(const f32 yaw, const f32 pitch, const f32 roll)
@@ -163,5 +163,13 @@ namespace orx
     Quaternion Quaternion::negate(const Quaternion& quaternion)
     { 
         return Quaternion(XMVectorScale(quaternion.getXMVector(), -1.f));
+    }
+
+    std::string Quaternion::toString() const
+    {
+        std::stringstream stream;
+        stream.precision(2);
+        stream << "<" << getX() << ", " << getY() << ", " << getZ() << ">";
+        return stream.str();
     }
 }

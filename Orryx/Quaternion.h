@@ -4,6 +4,9 @@
 #include "OrryxMath.h"
 #include "OrryxTypes.h"
 
+#include <string>
+#include <sstream>
+
 #include <DirectXMath.h>
 
 using namespace DirectX;
@@ -128,6 +131,8 @@ namespace orx
             fvec.w = w;
             m_vector = XMLoadFloat4(&fvec);
         }
+
+        std::string toString() const;
 
         static Quaternion identity() { return Quaternion(0.f, 0.f, 0.f, 1.f); }
         static const Quaternion IDENTITY;
