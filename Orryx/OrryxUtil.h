@@ -22,16 +22,19 @@ namespace orx
                 pos = str.length();
 
                 if (pos != lastPos || !trimEmpty)
+                {
                     tokens.push_back(value_type(str.data() + lastPos,
-                    (size_type)pos - lastPos));
-
+                                     (size_type)pos - lastPos));
+                }
                 break;
             }
             else
             {
                 if (pos != lastPos || !trimEmpty)
+                {
                     tokens.push_back(value_type(str.data() + lastPos,
-                    (size_type)pos - lastPos));
+                                     (size_type)pos - lastPos));
+                }
             }
 
             lastPos = pos + 1;
