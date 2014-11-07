@@ -7,6 +7,7 @@
 #include "OrryxGL.h"
 #include "Mesh.h"
 #include "MeshRenderer.h"
+#include "MeshLoader.h"
 
 #include <cassert>
 #include <iostream>
@@ -85,7 +86,6 @@ namespace orx
 
         Camera camera;
         camera.move(0.f, 5.f, 5.f);
-        camera.lookAt(0, 0, 0);
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
@@ -138,6 +138,12 @@ namespace orx
         
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
 
+        Mesh testMesh;
+        if (!MeshLoader::LoadObj("Assets/teapot.obj", testMesh))
+        {
+            Logging::LogError("MeshLoader", "Failed to load asset.");
+        }
+
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
 
@@ -173,19 +179,49 @@ namespace orx
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
            
             shader.use();
+
+            const f32 moveSpeed = 10.f;
+            f32 scaledSpeed = moveSpeed * m_time.delta();
             
             if (m_input.getKey(SDL_SCANCODE_A))
             {
-                camera.move(-0.1f, 0.f, 0.f);
+                camera.moveDirection(Vector::LEFT, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_D))
             {
-                camera.move(0.1f, 0.f, 0.f);
+                camera.moveDirection(Vector::RIGHT, scaledSpeed);
             }
 
-            //camera.move(0.f, 0.01f, 0.f);
-            camera.lookAt(camera.getPosition() + Vector(0.f, -5.f, -5.f));
+            if (m_input.getKey(SDL_SCANCODE_W))
+            {
+                camera.moveDirection(Vector::FORWARD, scaledSpeed);
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_S))
+            {
+                camera.moveDirection(Vector::BACKWARD, scaledSpeed);
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_RIGHT))
+            {
+                camera.rotateAxisAngle(Vector::DOWN, orx::PI * m_time.delta());
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_LEFT))
+            {
+                camera.rotateAxisAngle(Vector::DOWN, -orx::PI * m_time.delta());
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_UP))
+            {
+                camera.moveDirection(Vector::UP, scaledSpeed);
+            }
+
+            if (m_input.getKey(SDL_SCANCODE_DOWN))
+            {
+                camera.moveDirection(Vector::DOWN, scaledSpeed);
+            }
 
             MeshRenderer meshRenderer;
             meshRenderer.setMesh(&mesh);
@@ -200,13 +236,19 @@ namespace orx
                 for (int j = 0; j < height; ++j)
                 {
                     Transform transform;
-                    transform.m_position = Vector((i - (width / 2)) * 2.f,
+                    transform.m_position = Vector((i - (width / 2)) * 1.f,
                         sinf(time - i) * 0.5f * cosf(time - j),
-                        (j - (height / 2)) * 2.f);
+                        (j - (height / 2)) * 1.f);
                     meshRenderer.perObjectSetup(transform);
                     meshRenderer.render(transform);
                 }
             }
+
+            meshRenderer.setMesh(&testMesh);
+            Transform transform;
+            transform.m_position = Vector(0.f, 1.f, 0.f);
+            meshRenderer.perObjectSetup(transform);
+            meshRenderer.render(transform);
             
             m_input.update();
 

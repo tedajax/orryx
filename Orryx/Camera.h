@@ -22,6 +22,7 @@ namespace orx
         void setPosition(f32 x, f32 y, f32 z) { setPosition(Vector(x, y, z)); }
         void move(const Vector& amount);
         void move(f32 x, f32 y, f32 z) { move(Vector(x, y, z)); }
+        void moveDirection(const Vector& direction, const f32 amount);
 
         void lookAt(const Vector& target);
         void lookAt(f32 x, f32 y, f32 z) { lookAt(Vector(x, y, z)); }

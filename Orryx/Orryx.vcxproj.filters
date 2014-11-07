@@ -46,6 +46,12 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{ea84a029-a827-4367-bb39-56a3ca49e234}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Resources">
+      <UniqueIdentifier>{74a3b219-292b-40a7-83a5-2e0584396809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{2ec31d3b-3805-4d05-9194-1e4d274f0c01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -92,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="OrryxUtil.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

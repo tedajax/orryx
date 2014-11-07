@@ -127,7 +127,7 @@ namespace orx
         return Quaternion(XMQuaternionRotationMatrix(matrix.getXMMatrix()));
     }
 
-    Quaternion Quaternion::fromLookAt(const Vector& source, const Vector target)
+    Quaternion Quaternion::fromLookAt(const Vector& source, const Vector& target)
     {
         Vector forward = Vector::normalize(target - source);
         f32 dot = Vector::dot(Vector::FORWARD, forward);
@@ -163,6 +163,45 @@ namespace orx
     Quaternion Quaternion::negate(const Quaternion& quaternion)
     { 
         return Quaternion(XMVectorScale(quaternion.getXMVector(), -1.f));
+    }
+
+    Vector Quaternion::toEuler(const Quaternion& quaternion)
+    {
+        f32 x = quaternion.getX();
+        f32 y = quaternion.getY();
+        f32 z = quaternion.getZ();
+        f32 w = quaternion.getW();
+
+        f32 pitch, yaw, roll;
+
+        f32 sqx = x*x;
+        f32 sqy = y*y;
+        f32 sqz = z*z;
+        f32 sqw = w*w;
+
+        f32 unit = sqx + sqy + sqz + sqw;
+        f32 test = x*y + z*w;
+
+        if (test > 0.499f)
+        {
+            pitch = orx::PI_OVER_2;
+            yaw = 2.f * atan2f(x, w);
+            roll = 0;
+        }
+        else if (test < -0.499f)
+        {
+            pitch = -orx::PI_OVER_2;
+            yaw = -2.f * atan2f(x, w);
+            roll = 0.f;
+        }
+        else
+        {
+            pitch = asinf(2.f * test / unit);
+            yaw = atan2f(2.f * y*w - 2.f * x*z, sqx - sqy - sqz + sqw);
+            roll = atan2f(2.f * x*w - 2.f * y*z, -sqx + sqy - sqz + sqw);
+        }
+
+        return Vector(pitch, yaw, roll);
     }
 
     std::string Quaternion::toString() const

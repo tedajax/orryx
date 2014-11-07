@@ -46,10 +46,11 @@ namespace orx
         static Quaternion fromAxisAngle(const Vector& axis, f32 angle);
         static Quaternion fromYawPitchRoll(const f32 yaw, const f32 pitch, const f32 roll);
         static Quaternion fromRotationMatrix(const Matrix& matrix);
-        static Quaternion fromLookAt(const Vector& source, const Vector target);
+        static Quaternion fromLookAt(const Vector& source, const Vector& target);
         static f32 dot(const Quaternion& q1, const Quaternion& q2);
         static Quaternion slerp(const Quaternion& q1, const Quaternion& q2, f32 t);
         static Quaternion negate(const Quaternion& quaternion);
+        static Vector toEuler(const Quaternion& quaternion);
 
         f32 operator[](const int i) const
         {

@@ -19,18 +19,20 @@ namespace orx
         ~Mesh();
 
         void setVertices(const f32* vertices, u32 count);
+        void setVertices(const std::vector<Vector3>& vertices);
         void setIndices(const u16* indices, u32 count);
+        void setIndices(const std::vector<u16>& indices);
 
         void bindVertexBuffer();
         void bindIndexBuffer();
         void enableAttribArrays();
         void disableAttribArrays();
 
-        std::vector<f32> getVertices() { return m_vertices; }
+        std::vector<Vector3> getVertices() { return m_vertices; }
         std::vector<u16> getIndicies() { return m_indices; }
 
     private:
-        std::vector<f32> m_vertices;
+        std::vector<Vector3> m_vertices;
         std::vector<u16> m_indices;
 
         GLuint m_vertexPositionArray;

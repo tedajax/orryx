@@ -27,10 +27,17 @@ namespace orx
         m_position += amount;
     }
 
+    void Camera::moveDirection(const Vector& direction, const f32 amount)
+    {
+        Vector forward = Vector::normalize(Vector::transform(direction, m_rotation));
+        m_position += forward * amount;
+    }
+
     void Camera::lookAt(const Vector& target)
     {
         m_rotation = Quaternion::fromLookAt(m_position, target);
-        Logging::LogInfo("rotation", m_rotation.toString().c_str());
+        Vector euler = Quaternion::toEuler(m_rotation);
+        int i = 0;
     }
 
     void Camera::rotateAxisAngle(const Vector& axis, f32 angle)
@@ -41,7 +48,7 @@ namespace orx
 
     Matrix Camera::getView() const
     {
-        Vector target = Vector::transform(Vector::FORWARD, m_rotation);
+        Vector target = m_position + Vector::transform(Vector::FORWARD, m_rotation);
         Vector up = Vector::transform(Vector::UP, m_rotation);
         Matrix m = Matrix::createLookAt(m_position, target, up);
         return m;
