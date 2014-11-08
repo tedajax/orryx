@@ -139,7 +139,7 @@ namespace orx
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
 
         Mesh testMesh;
-        if (!MeshLoader::LoadObj("Assets/teapot.obj", testMesh))
+        if (!MeshLoader::LoadObj("Assets/monkey.obj", testMesh))
         {
             Logging::LogError("MeshLoader", "Failed to load asset.");
         }
@@ -246,7 +246,7 @@ namespace orx
 
             meshRenderer.setMesh(&testMesh);
             Transform transform;
-            transform.m_position = Vector(0.f, 1.f, 0.f);
+            transform.m_position = Vector(0.f, 5.f, 0.f);
             meshRenderer.perObjectSetup(transform);
             meshRenderer.render(transform);
             

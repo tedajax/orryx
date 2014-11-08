@@ -18,11 +18,8 @@ namespace orx
         static bool LoadObj(const char* filename, Mesh& destination);
 
     private:
-        static bool ParseLines(const char* filename, std::vector<std::string>& destination);
-        static std::vector<Vector3> ObjVertexPass(const std::vector<std::string>& lines);
-        static std::vector<Vector2> ObjTexCoordPass(const std::vector<std::string>& lines);
-        static std::vector<Vector3> ObjNormalPass(const std::vector<std::string>& lines);
-        static std::vector<u16> ObjIndexPass(const std::vector<std::string>& lines);
+        bool static ParseLines(const char* filename, std::vector<std::string>& destination);
+        static void ObjParseFaceEntry(std::string faceEntry, int& vertex, int& texCoord, int& normal);
     };
 }
 

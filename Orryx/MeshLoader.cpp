@@ -12,9 +12,59 @@ namespace orx
             return false;
         }
 
-        auto vertices = ObjVertexPass(lines);
-        auto indices = ObjIndexPass(lines);
-        
+        std::vector<Vector3> vertices;
+        std::vector<u16> indices;
+
+        for (int i = 0; i < lines.size(); ++i)
+        {
+            std::string line = lines[i];
+            std::vector<std::string> tokens;
+            orx::tokenize<decltype(tokens)>(line, tokens);
+            
+            if (tokens[0] == "v")
+            {
+                f32 x = std::stof(tokens[1]);
+                f32 y = std::stof(tokens[2]);
+                f32 z = std::stof(tokens[3]);
+                vertices.push_back({ x, y, z });
+            }
+            else if (tokens[0] == "vt")
+            {
+                
+            }
+            else if (tokens[0] == "vn")
+            {
+
+            }
+            else if (tokens[0] == "f")
+            {
+                int vertex = -1;
+                int texCoord = -1;
+                int normal = -1;
+
+                ObjParseFaceEntry(tokens[1], vertex, texCoord, normal);
+
+                if (vertex > 0)
+                {
+                    indices.push_back((u16)vertex);
+                }
+
+                ObjParseFaceEntry(tokens[2], vertex, texCoord, normal);
+
+                if (vertex > 0)
+                {
+                    indices.push_back((u16)vertex);
+                }
+
+                ObjParseFaceEntry(tokens[3], vertex, texCoord, normal);
+
+                if (vertex > 0)
+                {
+                    indices.push_back((u16)vertex);
+                }
+            }
+        }
+
         destination.setVertices(vertices);
         destination.setIndices(indices);
 
@@ -42,61 +92,28 @@ namespace orx
         return true;
     }
 
-    std::vector<Vector3> MeshLoader::ObjVertexPass(const std::vector<std::string>& lines)
+    void MeshLoader::ObjParseFaceEntry(std::string faceEntry, int& vertex, int& texCoord, int& normal)
     {
-        std::vector<Vector3> vertices;
+        std::vector<std::string> tokens;
+        orx::tokenize<decltype(tokens)>(faceEntry, tokens, "/");
 
-        for (auto line : lines)
+        if (tokens.size() >= 3)
         {
-            std::vector<std::string> tokens;
-            orx::tokenize<std::vector<std::string>>(line, tokens);
-
-            if (tokens[0] == "v")
+            vertex = std::stoi(tokens[0]);
+            if (tokens[1].length() > 0)
             {
-                f32 x = std::stof(tokens[1]);
-                f32 y = std::stof(tokens[2]);
-                f32 z = std::stof(tokens[3]);
-
-                vertices.push_back({ x, y, z });
+                texCoord = std::stoi(tokens[1]);
             }
+            normal = std::stoi(tokens[2]);
         }
-
-        return vertices;
-    }
-
-    std::vector<Vector2> MeshLoader::ObjTexCoordPass(const std::vector<std::string>& lines)
-    {
-        std::vector<Vector2> texCoords;
-        return texCoords;
-    }
-
-    std::vector<Vector3> MeshLoader::ObjNormalPass(const std::vector<std::string>& lines)
-    {
-        std::vector<Vector3> normals;
-        return normals;
-    }
-
-    std::vector<u16> MeshLoader::ObjIndexPass(const std::vector<std::string>& lines)
-    {
-        std::vector<u16> indices;
-
-        for (auto line : lines)
+        else if (tokens.size() >= 2)
         {
-            std::vector<std::string> tokens;
-            orx::tokenize<std::vector<std::string>>(line, tokens);
-
-            if (tokens[0] == "f")
-            {
-                u16 i0 = std::stoi(tokens[1]);
-                u16 i1 = std::stoi(tokens[2]);
-                u16 i2 = std::stoi(tokens[3]);
-
-                indices.push_back(i0);
-                indices.push_back(i1);
-                indices.push_back(i2);
-            }
+            vertex = std::stoi(tokens[0]);
+            texCoord = std::stoi(tokens[1]);
         }
-
-        return indices;
+        else if (tokens.size() >= 1)
+        {
+            vertex = std::stoi(tokens[0]);
+        }
     }
 }
