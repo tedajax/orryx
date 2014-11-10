@@ -122,6 +122,12 @@ namespace orx
         static Vector transform(const Vector& position, const Quaternion& rotation);
 
         const XMVECTOR& getXMVector() const { return m_vector; }
+        const XMFLOAT4 getFloat4() const
+        {
+            XMFLOAT4 floats;
+            XMStoreFloat4(&floats, m_vector);
+            return floats;
+        }
 
         inline f32 getX() const { return get(0); }
         inline f32 getY() const { return get(1); }

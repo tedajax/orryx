@@ -4,8 +4,10 @@ namespace orx
 {
     Mesh::Mesh()
         : m_vertexBuffer(0),
-        m_indexBuffer(0),
-        m_vertexPositionArray(0)
+        m_normalBuffer(0),
+        m_indexBuffer(0),        
+        m_vertexPositionArray(0),
+        m_vertexNormalArray(0)
     {
 
     }
@@ -66,6 +68,57 @@ namespace orx
         glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vector3), &m_vertices[0], GL_STATIC_DRAW);
     }
 
+    void Mesh::setNormals(const f32* normals, u32 count)
+    {
+        if (m_vertexNormalArray)
+        {
+            glDeleteVertexArrays(1, &m_vertexNormalArray);
+        }
+
+        if (m_normalBuffer)
+        {
+            glDeleteBuffers(1, &m_normalBuffer);
+        }
+
+        m_normals.clear();
+        for (u32 i = 0; i < count; i += 3)
+        {
+            f32 x = normals[i + 0];
+            f32 y = normals[i + 1];
+            f32 z = normals[i + 2];
+            m_vertices.push_back({ x, y, z });
+        }
+
+        glGenVertexArrays(1, &m_vertexNormalArray);
+        glBindVertexArray(m_vertexNormalArray);
+
+        glGenBuffers(1, &m_normalBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, m_normalBuffer);
+        glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vector3), &m_vertices[0], GL_STATIC_DRAW);
+    }
+
+    void Mesh::setNormals(const std::vector<Vector3>& normals)
+    {
+        if (m_vertexNormalArray)
+        {
+            glDeleteVertexArrays(1, &m_vertexNormalArray);
+        }
+
+        if (m_normalBuffer)
+        {
+            glDeleteBuffers(1, &m_normalBuffer);
+        }
+
+        m_normals = normals;
+
+        glGenVertexArrays(1, &m_vertexNormalArray);
+        glBindVertexArray(m_vertexNormalArray);
+
+        glGenBuffers(1, &m_normalBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, m_normalBuffer);
+        glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vector3), &m_vertices[0], GL_STATIC_DRAW);
+    }
+
     void Mesh::setIndices(const u16* indices, u32 count)
     {
         if (m_indexBuffer)
@@ -98,9 +151,41 @@ namespace orx
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(u16), &m_indices[0], GL_STATIC_DRAW);
     }
 
+    void Mesh::calculateNormals()
+    {
+        std::vector<Vector3> normals;
+
+        for (int i = 0; i < m_indices.size() / 3; ++i)
+        {
+            u16 i1 = m_indices[i * 3 + 0];
+            u16 i2 = m_indices[i * 3 + 1];
+            u16 i3 = m_indices[i * 3 + 2];
+
+            Vector3 v1 = m_vertices[i2];
+            Vector3 v2 = m_vertices[i1];
+
+            Vector normal = Vector::normalize(Vector::cross(Vector(v1), Vector(v2)));
+
+            Vector3 normalV3 = {
+                normal.getX(),
+                normal.getY(),
+                normal.getZ()
+            };
+
+            normals.push_back(normalV3);
+        }
+
+        setNormals(normals);
+    }
+
     void Mesh::bindVertexBuffer()
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    }
+
+    void Mesh::bindNormalBuffer()
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_normalBuffer);
     }
 
     void Mesh::bindIndexBuffer()
@@ -160,6 +245,7 @@ namespace orx
         Mesh mesh;
         mesh.setVertices(vertices, 24);
         mesh.setIndices(indices, 36);
+        mesh.calculateNormals();
 
         return mesh;
     }

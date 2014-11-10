@@ -209,8 +209,8 @@ namespace orx
             meshRenderer.setCamera(&camera);
             
             glBindBuffer(GL_UNIFORM_BUFFER, cameraMatricesUBO);
-            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(f32)* 16, &camera.getView().getFloat4x4().m[0][0]);
-            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(f32) * 16, sizeof(f32) * 16, &camera.getProjection().getFloat4x4().m[0][0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(f32)* 16, GL_MATRIX(camera.getView()));
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(f32) * 16, sizeof(f32) * 16, GL_MATRIX(camera.getProjection()));
 
             time += m_time.delta() * 4.f;
 
@@ -219,11 +219,11 @@ namespace orx
                 for (int j = 0; j < height; ++j)
                 {
                     Transform transform;
-                    transform.m_scale.setY(0.2f);
-                    transform.m_position = Vector((i - (width / 2)) * size,
+                    transform.m_position = Vector((i - (width / 2)) * (size + 0.1f),
                         sinf(time - i) * 1.f * cosf(time - j),
-                        (j - (height / 2)) * size);
+                        (j - (height / 2)) * (size + 0.1f));
                     transform.m_rotation = Quaternion::fromAxisAngle(Vector::RIGHT, sinf(time - i * 0.1f) * orx::PI);
+                    //transform.m_rotation = Quaternion::fromAxisAngle(Vector::UP, time * 0.1f);
                     meshRenderer.perObjectSetup(transform);
                     meshRenderer.render(transform);
                 }

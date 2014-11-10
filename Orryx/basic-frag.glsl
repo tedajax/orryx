@@ -2,11 +2,32 @@
 
 out vec4 color;
 
-varying vec4 vPos;
+vec3 lightDirection;
+vec4 lightColor;
+vec4 ambientColor;
+
+in vec3 vNormal;
+in vec3 eyeDirection;
 
 void main() {
-	vec4 col1 = vec4(0, 0, 0, 1);
-	vec4 col2 = vec4(1, 1, 0, 1);
-	float heightFactor = 2;
-	color = mix(col1, col2, (vPos.y + heightFactor) / (heightFactor * 2));
+	lightDirection = vec3(0.5, 0.5, 0.0);
+	lightColor = vec4(1.0, 1.0, 1.0, 1);
+	ambientColor = vec4(0.2, 0.2, 0.2, 1);
+	vec4 specularColor = vec4(1, 1, 1, 1);
+	vec4 diffuse = vec4(1, 0, 0, 1);
+
+	vec3 n = normalize(vNormal);
+	vec3 l = normalize(lightDirection);
+	float dirLight = clamp(dot(n, l), 0, 1);
+
+	vec3 E = normalize(eyeDirection);
+	vec3 R = reflect(-l, n);
+	float d = dot(E, R);
+	float specLight = clamp(d, 0, 1);
+	
+	vec4 ambientLight = diffuse * ambientColor;
+	vec4 diffuseLight = diffuse * lightColor * dirLight;
+	vec4 specularLight = specularColor * lightColor * pow(specLight, 10);
+
+	color = ambientLight + diffuseLight + specularLight;
 }

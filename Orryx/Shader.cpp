@@ -80,7 +80,7 @@ namespace orx
             glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logLength);
             char* log = new char[logLength];
             glGetShaderInfoLog(shaderId, logLength, nullptr, log);
-            fprintf(stderr, "Shader compile error: %s\n", log);
+            fprintf(stderr, "Shader compile error in \'%s\': %s\n", filename, log);
             return 0;
         }
 

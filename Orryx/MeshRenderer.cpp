@@ -33,8 +33,15 @@ namespace orx
         glEnableVertexAttribArray(0);
         m_mesh->bindVertexBuffer();
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+        glEnableVertexAttribArray(1);
+        m_mesh->bindNormalBuffer();
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
         m_mesh->bindIndexBuffer();
         glDrawElements(GL_TRIANGLES, (GLsizei)m_mesh->getIndicies().size(), GL_UNSIGNED_SHORT, nullptr);
-        glDisableVertexAttribArray(0);
+        
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(0);        
     }
 }
