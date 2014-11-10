@@ -15,6 +15,8 @@ namespace orx
         Matrix projection = m_camera->getProjection();
         Matrix view = m_camera->getView();
 
+        
+
         GL::uniformMatrix4fv(m_shader->getUniform("view"), view);
         GL::uniformMatrix4fv(m_shader->getUniform("projection"), projection);
     }

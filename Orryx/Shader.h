@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 
+#include <map>
+
 #include "OrryxTypes.h"
 
 namespace orx
@@ -18,8 +20,10 @@ namespace orx
         void destroy();
 
         GLint getUniform(const char* name);
+        GLint getUniformBlock(const char* name);
 
         void use();
+        GLuint getProgram() { return m_program; }
 
     private:
         GLuint loadShader(const char* filename, GLenum shaderType);
@@ -30,16 +34,10 @@ namespace orx
         GLuint m_fragment;
         GLuint m_program;
 
-        struct UniformPair
-        {
-            char* m_name;
-            GLuint m_uniform;
-        };
+        enum { MAX_UNIFORMS = 20, MAX_UNIFORM_BLOCKS = 20 };
 
-        enum { MAX_UNIFORMS = 20 };
-
-        UniformPair m_uniforms[MAX_UNIFORMS];
-        u32 m_uniformCount;
+        std::map<std::string, GLuint> m_uniforms;
+        std::map<std::string, GLuint> m_uniformBlocks;
     };
 }
 

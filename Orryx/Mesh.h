@@ -31,6 +31,8 @@ namespace orx
         std::vector<Vector3> getVertices() { return m_vertices; }
         std::vector<u16> getIndicies() { return m_indices; }
 
+        static Mesh createCube(f32 halfSize = 0.5f);
+
     private:
         std::vector<Vector3> m_vertices;
         std::vector<u16> m_indices;

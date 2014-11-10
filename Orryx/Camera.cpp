@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include "OrryxLogging.h"
+#include "ConfigData.h"
 
 #include <iostream>
 
@@ -9,12 +10,13 @@ namespace orx
     // TODO these should be smarter
     Camera::Camera()
         : m_fov(75.f),
-        m_aspect(4.f / 3.f),
         m_near(0.1f),
         m_far(1000.f),
         m_type(CAMERA_PERSPECTIVE)
     {
-
+        int width = ConfigData::get("screen_width");
+        int height = ConfigData::get("screen_height");
+        m_aspect = (f32)width / (f32)height;
     }
 
     Camera::~Camera()

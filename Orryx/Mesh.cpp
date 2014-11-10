@@ -117,4 +117,50 @@ namespace orx
     {
         glDisableVertexAttribArray(0);
     }
+
+    Mesh Mesh::createCube(f32 halfSize /* = 0.5f */)
+    {
+        static const GLfloat vertices[24] = {
+            -halfSize, halfSize, halfSize, // 0
+            halfSize, halfSize, halfSize, // 1
+            -halfSize, -halfSize, halfSize, // 2
+            halfSize, -halfSize, halfSize, // 3
+            -halfSize, halfSize, -halfSize, // 4
+            halfSize, halfSize, -halfSize, // 5
+            -halfSize, -halfSize, -halfSize, // 6
+            halfSize, -halfSize, -halfSize, // 7
+        };
+
+        static const GLushort indices[36] = {
+            // front
+            0, 1, 2,
+            2, 1, 3,
+
+            // right
+            1, 7, 3,
+            7, 1, 5,
+
+            // back
+            5, 6, 7,
+            6, 5, 4,
+
+            // left
+            4, 2, 6,
+            2, 4, 0,
+
+            // top
+            4, 1, 0,
+            1, 4, 5,
+
+            // bottom
+            3, 7, 6,
+            6, 2, 3,
+        };
+
+        Mesh mesh;
+        mesh.setVertices(vertices, 24);
+        mesh.setIndices(indices, 36);
+
+        return mesh;
+    }
 }

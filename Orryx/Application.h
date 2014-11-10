@@ -38,6 +38,7 @@ namespace orx
         void handleEvent(SDL_Event event);
         void handleKeyDown(SDL_KeyboardEvent event);
         void handleKeyUp(SDL_KeyboardEvent event);
+        void handleResize(int w, int h);
         void update();
         void render();
     };

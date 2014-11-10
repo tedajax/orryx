@@ -7,7 +7,7 @@
 #include "OrryxGL.h"
 #include "Mesh.h"
 #include "MeshRenderer.h"
-#include "MeshLoader.h"
+#include "ConfigData.h"
 
 #include <cassert>
 #include <iostream>
@@ -53,7 +53,7 @@ namespace orx
         SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
-
+        
         Logging::LogInfo("Application", "Initializing GL context.");
         m_context = SDL_GL_CreateContext(m_window.raw());
         if (!m_context)
@@ -63,6 +63,7 @@ namespace orx
         }
 
         SDL_GL_MakeCurrent(m_window.raw(), m_context);
+        SDL_GL_SetSwapInterval(0);
 
         Logging::LogInfo("Application", "Initializing GLEW.");
         glewExperimental = GL_TRUE;
@@ -75,6 +76,7 @@ namespace orx
         }
 
         m_isInitialized = true;
+
         return true;
     }
 
@@ -90,59 +92,14 @@ namespace orx
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
-        const f32 size = 1.f;
+        const f32 size = 5.f;
         const f32 halfSize = size / 2.f;
-        static const GLfloat vertices[24] = {
-            -halfSize,  halfSize,  halfSize, // 0
-             halfSize,  halfSize,  halfSize, // 1
-            -halfSize, -halfSize,  halfSize, // 2
-             halfSize, -halfSize,  halfSize, // 3
-            -halfSize,  halfSize, -halfSize, // 4
-             halfSize,  halfSize, -halfSize, // 5
-            -halfSize, -halfSize, -halfSize, // 6
-             halfSize, -halfSize, -halfSize, // 7
-        };
-
-        static const GLushort indices[36] = {
-            // front
-            0, 1, 2,
-            2, 1, 3,
-
-            // right
-            1, 7, 3,
-            7, 1, 5,
-
-            // back
-            5, 6, 7,
-            6, 5, 4,
-
-            // left
-            4, 2, 6,
-            2, 4, 0,
-
-            // top
-            4, 1, 0,
-            1, 4, 5,
-
-            // bottom
-            3, 7, 6,
-            6, 2, 3,
-        };
-
-        Mesh mesh;
-        mesh.setVertices(vertices, 24);
-        mesh.setIndices(indices, 36);
+        Mesh mesh = Mesh::createCube(halfSize);
 
         f32 angle = 0.f;
         f32 radius = 5.f;
         
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
-
-        Mesh testMesh;
-        if (!MeshLoader::LoadObj("Assets/monkey.obj", testMesh))
-        {
-            Logging::LogError("MeshLoader", "Failed to load asset.");
-        }
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
@@ -155,6 +112,17 @@ namespace orx
 
         f32 time = 0.f;
 
+        GLuint cameraMatricesUBO;
+        glGenBuffers(1, &cameraMatricesUBO);
+        glBindBuffer(GL_UNIFORM_BUFFER, cameraMatricesUBO);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(f32)* 16 * 2, nullptr, GL_STREAM_DRAW);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+        GLint cameraUniformBlock = shader.getUniformBlock("CameraMatrices");
+        GLint cameraMatricesBinding = 1;
+        glUniformBlockBinding(shader.getProgram(), cameraUniformBlock, cameraMatricesBinding);
+        glBindBufferRange(GL_UNIFORM_BUFFER, cameraMatricesBinding, cameraMatricesUBO, 0, sizeof(f32) * 16 * 2);
+        
         while (m_isRunning)
         {
             while (SDL_PollEvent(&event))
@@ -223,35 +191,47 @@ namespace orx
                 camera.moveDirection(Vector::DOWN, scaledSpeed);
             }
 
+            if (m_input.getKeyDown(SDL_SCANCODE_Z))
+            {
+                ++width;
+                ++height;
+            }
+
+            if (m_input.getKeyDown(SDL_SCANCODE_X))
+            {
+                --width;
+                --height;
+            }
+
             MeshRenderer meshRenderer;
             meshRenderer.setMesh(&mesh);
             meshRenderer.setShader(&shader);
             meshRenderer.setCamera(&camera);
-            meshRenderer.perFrameSetup();
+            
+            glBindBuffer(GL_UNIFORM_BUFFER, cameraMatricesUBO);
+            glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(f32)* 16, &camera.getView().getFloat4x4().m[0][0]);
+            glBufferSubData(GL_UNIFORM_BUFFER, sizeof(f32) * 16, sizeof(f32) * 16, &camera.getProjection().getFloat4x4().m[0][0]);
 
-            time += m_time.delta();
+            time += m_time.delta() * 4.f;
 
             for (int i = 0; i < width; ++i)
             {
                 for (int j = 0; j < height; ++j)
                 {
                     Transform transform;
-                    transform.m_position = Vector((i - (width / 2)) * 1.f,
-                        sinf(time - i) * 0.5f * cosf(time - j),
-                        (j - (height / 2)) * 1.f);
+                    transform.m_scale.setY(0.2f);
+                    transform.m_position = Vector((i - (width / 2)) * size,
+                        sinf(time - i) * 1.f * cosf(time - j),
+                        (j - (height / 2)) * size);
+                    transform.m_rotation = Quaternion::fromAxisAngle(Vector::RIGHT, sinf(time - i * 0.1f) * orx::PI);
                     meshRenderer.perObjectSetup(transform);
                     meshRenderer.render(transform);
                 }
             }
-
-            meshRenderer.setMesh(&testMesh);
-            Transform transform;
-            transform.m_position = Vector(0.f, 5.f, 0.f);
-            meshRenderer.perObjectSetup(transform);
-            meshRenderer.render(transform);
             
             m_input.update();
 
+            
             SDL_GL_SwapWindow(m_window.raw());
         }
 
@@ -270,6 +250,10 @@ namespace orx
         case SDL_KEYUP:
             handleKeyDown(event.key);
             break;
+
+        case SDL_WINDOWEVENT_RESIZED:
+            handleResize(event.window.data1, event.window.data2);
+            break;
         }
     }
 
@@ -281,6 +265,12 @@ namespace orx
     void Application::handleKeyUp(SDL_KeyboardEvent event)
     {
 
+    }
+
+    void Application::handleResize(int w, int h)
+    {
+        ConfigData::set("screen_width", w);
+        ConfigData::set("screen_height", h);
     }
 
     void Application::update()

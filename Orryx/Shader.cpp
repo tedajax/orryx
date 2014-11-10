@@ -1,6 +1,7 @@
 #include "Shader.h"
 
 #include "OrryxFile.h"
+#include "OrryxLogging.h"
 #include <string>
 #include <cstdio>
 
@@ -9,8 +10,7 @@ namespace orx
     Shader::Shader()
         : m_vertex(0),
         m_fragment(0),
-        m_program(0),
-        m_uniformCount(0)
+        m_program(0)
     {
 
     }
@@ -43,26 +43,12 @@ namespace orx
 
     GLint Shader::getUniform(const char* name)
     {
-        for (u32 i = 0; i < m_uniformCount; ++i)
-        {
-            if (strcmp(name, m_uniforms[i].m_name) == 0)
-            {
-                return m_uniforms[i].m_uniform;
-            }
-        }
+        return glGetUniformLocation(m_program, name);
+    }
 
-        GLint uniform = glGetUniformLocation(m_program, name);
-        if (uniform)
-        {
-            UniformPair uniformPair;
-            size_t len = strlen(name);
-            uniformPair.m_name = (char*)calloc(len + 1, sizeof(char));
-            strncpy_s(uniformPair.m_name, len+1, name, 100);
-            uniformPair.m_uniform = uniform;
-            m_uniforms[m_uniformCount++] = uniformPair;
-        }
-
-        return uniform;
+    GLint Shader::getUniformBlock(const char* name)
+    {
+        return glGetUniformBlockIndex(m_program, name);
     }
 
     void Shader::use()
