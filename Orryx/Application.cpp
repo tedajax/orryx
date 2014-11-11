@@ -102,8 +102,8 @@ namespace orx
         
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
 
-        /*glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);*/
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -124,8 +124,8 @@ namespace orx
         glUniformBlockBinding(shader.getProgram(), cameraUniformBlock, cameraMatricesBinding);
         glBindBufferRange(GL_UNIFORM_BUFFER, cameraMatricesBinding, cameraMatricesUBO, 0, sizeof(f32) * 16 * 2);
 
-        Mesh teapot;
-        MeshLoader::LoadObj("Assets/teapot.obj", teapot);
+        Mesh loadedModel;
+        MeshLoader::LoadObj("Assets/teapot.obj", loadedModel);
         
         while (m_isRunning)
         {
@@ -157,42 +157,42 @@ namespace orx
             
             if (m_input.getKey(SDL_SCANCODE_A))
             {
-                camera.moveDirection(Vector::LEFT, scaledSpeed);
+                camera.moveDirection(Vector::cLeft, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_D))
             {
-                camera.moveDirection(Vector::RIGHT, scaledSpeed);
+                camera.moveDirection(Vector::cRight, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_W))
             {
-                camera.moveDirection(Vector::FORWARD, scaledSpeed);
+                camera.moveDirection(Vector::cForward, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_S))
             {
-                camera.moveDirection(Vector::BACKWARD, scaledSpeed);
+                camera.moveDirection(Vector::cBackward, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_RIGHT))
             {
-                camera.rotateAxisAngle(Vector::DOWN, orx::PI * m_time.delta());
+                camera.rotateAxisAngle(Vector::cDown, orx::PI * m_time.delta());
             }
 
             if (m_input.getKey(SDL_SCANCODE_LEFT))
             {
-                camera.rotateAxisAngle(Vector::DOWN, -orx::PI * m_time.delta());
+                camera.rotateAxisAngle(Vector::cDown, -orx::PI * m_time.delta());
             }
 
             if (m_input.getKey(SDL_SCANCODE_UP))
             {
-                camera.moveDirection(Vector::UP, scaledSpeed);
+                camera.moveDirection(Vector::cUp, scaledSpeed);
             }
 
             if (m_input.getKey(SDL_SCANCODE_DOWN))
             {
-                camera.moveDirection(Vector::DOWN, scaledSpeed);
+                camera.moveDirection(Vector::cDown, scaledSpeed);
             }
 
             if (m_input.getKeyDown(SDL_SCANCODE_Z))
@@ -211,6 +211,12 @@ namespace orx
             meshRenderer.setMesh(&mesh);
             meshRenderer.setShader(&shader);
             meshRenderer.setCamera(&camera);
+
+
+
+            GL::uniform3fv(shader.getUniform("lightDirection"), Vector3(cosf(time), 0.5, sinf(time)));
+            GL::uniformColor(shader.getUniform("lightColor"), Color::cWhite);
+            GL::uniformColor(shader.getUniform("ambientColor"), Color(0.2f, 0.2f, 0.2f));
             
             glBindBuffer(GL_UNIFORM_BUFFER, cameraMatricesUBO);
             glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(f32)* 16, GL_MATRIX(camera.getView()));
@@ -226,16 +232,17 @@ namespace orx
                     transform.m_position = Vector((i - (width / 2)) * (size + 0.1f),
                         sinf(time - i) * 1.f * cosf(time - j),
                         (j - (height / 2)) * (size + 0.1f));
-                    transform.m_rotation = Quaternion::fromAxisAngle(Vector::RIGHT, sinf(time - i * 0.1f) * orx::PI);
+                    transform.m_rotation = Quaternion::fromAxisAngle(Vector::cRight, sinf(time - i * 0.1f) * orx::PI);
                     //transform.m_rotation = Quaternion::fromAxisAngle(Vector::UP, time * 0.1f);
                     meshRenderer.perObjectSetup(transform);
                     meshRenderer.render(transform);
                 }
             }
             
-            meshRenderer.setMesh(&teapot);
+            meshRenderer.setMesh(&loadedModel);
             Transform transform;
             transform.m_position = Vector(0.f, 6.f, 0.f);
+            //transform.m_rotation = Quaternion::fromAxisAngle(Vector::cRight, orx::PI_OVER_2);
             meshRenderer.perObjectSetup(transform);
             meshRenderer.render(transform);
 

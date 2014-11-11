@@ -50,8 +50,8 @@ namespace orx
 
     Matrix Camera::getView() const
     {
-        Vector target = m_position + Vector::transform(Vector::FORWARD, m_rotation);
-        Vector up = Vector::transform(Vector::UP, m_rotation);
+        Vector target = m_position + Vector::transform(Vector::cForward, m_rotation);
+        Vector up = Vector::transform(Vector::cUp, m_rotation);
         Matrix m = Matrix::createLookAt(m_position, target, up);
         return m;
     }

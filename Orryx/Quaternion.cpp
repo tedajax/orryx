@@ -1,7 +1,7 @@
 #include "Quaternion.h"
 namespace orx
 {
-    const Quaternion Quaternion::IDENTITY = Quaternion::identity();
+    const Quaternion Quaternion::cIdentity = Quaternion::identity();
 
     Quaternion::Quaternion()
     {
@@ -130,20 +130,20 @@ namespace orx
     Quaternion Quaternion::fromLookAt(const Vector& source, const Vector& target)
     {
         Vector forward = Vector::normalize(target - source);
-        f32 dot = Vector::dot(Vector::FORWARD, forward);
+        f32 dot = Vector::dot(Vector::cForward, forward);
 
         if (fabs(dot - -1.f) < 0.000001f)
         {
-            return Quaternion(Vector::UP, 3.1415926535897932f);
+            return Quaternion(Vector::cUp, 3.1415926535897932f);
         }
 
         if (fabs(dot - 1.f) < 0.000001f)
         {
-            return Quaternion::IDENTITY;
+            return Quaternion::cIdentity;
         }
 
         f32 angle = acosf(dot);
-        Vector axis = Vector::normalize(Vector::cross(Vector::FORWARD, forward));
+        Vector axis = Vector::normalize(Vector::cross(Vector::cForward, forward));
         return fromAxisAngle(axis, angle);
     }
 

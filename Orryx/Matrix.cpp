@@ -4,7 +4,7 @@
 
 namespace orx
 {
-    const Matrix Matrix::IDENTITY = Matrix::identity();
+    const Matrix Matrix::cIdentity = Matrix::identity();
 
     Matrix::Matrix()
     {

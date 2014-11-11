@@ -94,7 +94,7 @@ namespace orx
                           0, 0, 0, 1);
         }
 
-        static const Matrix IDENTITY;
+        static const Matrix cIdentity;
 
         std::string toString();
 

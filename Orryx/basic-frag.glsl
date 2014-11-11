@@ -2,17 +2,17 @@
 
 out vec4 color;
 
-vec3 lightDirection;
-vec4 lightColor;
-vec4 ambientColor;
+uniform vec3 lightDirection;
+uniform vec4 lightColor;
+uniform vec4 ambientColor;
 
 in vec3 vNormal;
 in vec3 eyeDirection;
 
 void main() {
-	lightDirection = vec3(0.5, 0.5, 0.0);
-	lightColor = vec4(1.0, 1.0, 1.0, 1);
-	ambientColor = vec4(0.2, 0.2, 0.2, 1);
+	//lightDirection = vec3(0.5, 0.5, 0.0);
+	//lightColor = vec4(1.0, 1.0, 1.0, 1);
+	//ambientColor = vec4(0.2, 0.2, 0.2, 1);
 	vec4 specularColor = vec4(1, 1, 1, 1);
 	vec4 diffuse = vec4(1, 0, 0, 1);
 

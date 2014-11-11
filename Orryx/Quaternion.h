@@ -136,7 +136,7 @@ namespace orx
         std::string toString() const;
 
         static Quaternion identity() { return Quaternion(0.f, 0.f, 0.f, 1.f); }
-        static const Quaternion IDENTITY;
+        static const Quaternion cIdentity;
 
     private:
         XMVECTOR m_vector;

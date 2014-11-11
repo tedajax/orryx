@@ -4,18 +4,18 @@
 
 namespace orx
 {
-    const Vector Vector::ZERO = Vector::zero();
-    const Vector Vector::ONE = Vector::one();
-    const Vector Vector::RIGHT = Vector::right();
-    const Vector Vector::LEFT = Vector::left();
-    const Vector Vector::UP = Vector::up();
-    const Vector Vector::DOWN = Vector::down();
-    const Vector Vector::FORWARD = Vector::forward();
-    const Vector Vector::BACKWARD = Vector::back();
-    const Vector Vector::UNIT_X = Vector::unitX();
-    const Vector Vector::UNIT_Y = Vector::unitY();
-    const Vector Vector::UNIT_Z = Vector::unitZ();
-    const Vector Vector::UNIT_W = Vector::unitW();
+    const Vector Vector::cZero = Vector::zero();
+    const Vector Vector::cOne = Vector::one();
+    const Vector Vector::cRight = Vector::right();
+    const Vector Vector::cLeft = Vector::left();
+    const Vector Vector::cUp = Vector::up();
+    const Vector Vector::cDown = Vector::down();
+    const Vector Vector::cForward = Vector::forward();
+    const Vector Vector::cBackward = Vector::back();
+    const Vector Vector::cUnitX = Vector::unitX();
+    const Vector Vector::cUnitY = Vector::unitY();
+    const Vector Vector::cUnitZ = Vector::unitZ();
+    const Vector Vector::cUnitW = Vector::unitW();
 
     Vector::Vector()
     {

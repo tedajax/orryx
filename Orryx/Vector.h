@@ -16,9 +16,23 @@ namespace orx
     class Matrix;
     class Quaternion;
     
-    struct Vector2 { f32 x, y; };
-    struct Vector3 { f32 x, y, z; };
-    struct Vector4 { f32 x, y, z, w; };
+    struct Vector2 
+    { 
+        Vector2(f32 _x, f32 _y) : x(_x), y(_y) {}
+        f32 x, y;
+    };
+    
+    struct Vector3 
+    { 
+        Vector3(f32 _x, f32 _y, f32 _z) : x(_x), y(_y), z(_z) {}
+        f32 x, y, z;
+    };
+
+    struct Vector4
+    {
+        Vector4(f32 _x, f32 _y, f32 _z, f32 _w) : x(_x), y(_y), z(_z), w(_w) {}
+        f32 x, y, z, w;
+    };
 
     class Vector
     {
@@ -159,31 +173,31 @@ namespace orx
             m_vector = XMLoadFloat4(&fvec);
         }
 
-        static Vector zero() { return Vector(0.f, 0.f, 0.f); }
-        static Vector one() { return Vector(1.f, 1.f, 1.f); }
-        static Vector right() { return Vector(1.f, 0.f, 0.f); }
-        static Vector left() { return Vector(-1.f, 0.f, 0.f); }
-        static Vector up() { return Vector(0.f, 1.f, 0.f); }
-        static Vector down() { return Vector(0.f, -1.f, 0.f); }
-        static Vector forward() { return Vector(0.f, 0.f, -1.f); }
-        static Vector back() { return Vector(0.f, 0.f, 1.f); }
-        static Vector unitX() { return Vector(1.f, 0.f, 0.f); }
-        static Vector unitY() { return Vector(0.f, 1.f, 0.f); }
-        static Vector unitZ() { return Vector(0.f, 0.f, 1.f); }
-        static Vector unitW() { return Vector(0.f, 0.f, 0.f, 1.f); }
+        static const Vector zero() { return Vector(0.f, 0.f, 0.f); }
+        static const Vector one() { return Vector(1.f, 1.f, 1.f); }
+        static const Vector right() { return Vector(1.f, 0.f, 0.f); }
+        static const Vector left() { return Vector(-1.f, 0.f, 0.f); }
+        static const Vector up() { return Vector(0.f, 1.f, 0.f); }
+        static const Vector down() { return Vector(0.f, -1.f, 0.f); }
+        static const Vector forward() { return Vector(0.f, 0.f, -1.f); }
+        static const Vector back() { return Vector(0.f, 0.f, 1.f); }
+        static const Vector unitX() { return Vector(1.f, 0.f, 0.f); }
+        static const Vector unitY() { return Vector(0.f, 1.f, 0.f); }
+        static const Vector unitZ() { return Vector(0.f, 0.f, 1.f); }
+        static const Vector unitW() { return Vector(0.f, 0.f, 0.f, 1.f); }
 
-        static const Vector ZERO;
-        static const Vector ONE;
-        static const Vector RIGHT;
-        static const Vector LEFT;
-        static const Vector UP;
-        static const Vector DOWN;
-        static const Vector FORWARD;
-        static const Vector BACKWARD;
-        static const Vector UNIT_X;
-        static const Vector UNIT_Y;
-        static const Vector UNIT_Z;
-        static const Vector UNIT_W;
+        static const Vector cZero;
+        static const Vector cOne;
+        static const Vector cRight;
+        static const Vector cLeft;
+        static const Vector cUp;
+        static const Vector cDown;
+        static const Vector cForward;
+        static const Vector cBackward;
+        static const Vector cUnitX;
+        static const Vector cUnitY;
+        static const Vector cUnitZ;
+        static const Vector cUnitW;
 
         std::string toString() const;
 

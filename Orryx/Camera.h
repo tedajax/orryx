@@ -28,9 +28,9 @@ namespace orx
         void lookAt(f32 x, f32 y, f32 z) { lookAt(Vector(x, y, z)); }
 
         void rotateAxisAngle(const Vector& axis, f32 angle);
-        void rotatePitch(f32 angle) { rotateAxisAngle(Vector::RIGHT, angle); }
-        void rotateYaw(f32 angle) { rotateAxisAngle(Vector::UP, angle); }
-        void rotateRoll(f32 angle) { rotateAxisAngle(Vector::FORWARD, angle); }
+        void rotatePitch(f32 angle) { rotateAxisAngle(Vector::cRight, angle); }
+        void rotateYaw(f32 angle) { rotateAxisAngle(Vector::cUp, angle); }
+        void rotateRoll(f32 angle) { rotateAxisAngle(Vector::cForward, angle); }
 
         Matrix getView() const;
         Matrix getProjection() const;
