@@ -46,21 +46,21 @@ namespace orx
 
                 if (vertex > 0)
                 {
-                    indices.push_back((u16)vertex);
+                    indices.push_back((u16)(vertex - 1));
                 }
 
                 ObjParseFaceEntry(tokens[2], vertex, texCoord, normal);
 
                 if (vertex > 0)
                 {
-                    indices.push_back((u16)vertex);
+                    indices.push_back((u16)(vertex - 1));
                 }
 
                 ObjParseFaceEntry(tokens[3], vertex, texCoord, normal);
 
                 if (vertex > 0)
                 {
-                    indices.push_back((u16)vertex);
+                    indices.push_back((u16)(vertex - 1));
                 }
             }
         }

@@ -7,6 +7,7 @@
 #include "OrryxGL.h"
 #include "Mesh.h"
 #include "MeshRenderer.h"
+#include "MeshLoader.h"
 #include "ConfigData.h"
 
 #include <cassert>
@@ -101,14 +102,14 @@ namespace orx
         
         Shader shader("basic-vert.glsl", "basic-frag.glsl");
 
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
+        /*glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);*/
 
         SDL_Event event;
         glClearColor(0.f, 0.f, 0.f, 1.f);
 
-        int width = 25;
-        int height = 25;
+        int width = 0;
+        int height = 0;
 
         f32 time = 0.f;
 
@@ -122,6 +123,9 @@ namespace orx
         GLint cameraMatricesBinding = 1;
         glUniformBlockBinding(shader.getProgram(), cameraUniformBlock, cameraMatricesBinding);
         glBindBufferRange(GL_UNIFORM_BUFFER, cameraMatricesBinding, cameraMatricesUBO, 0, sizeof(f32) * 16 * 2);
+
+        Mesh teapot;
+        MeshLoader::LoadObj("Assets/teapot.obj", teapot);
         
         while (m_isRunning)
         {
@@ -229,6 +233,12 @@ namespace orx
                 }
             }
             
+            meshRenderer.setMesh(&teapot);
+            Transform transform;
+            transform.m_position = Vector(0.f, 6.f, 0.f);
+            meshRenderer.perObjectSetup(transform);
+            meshRenderer.render(transform);
+
             m_input.update();
 
             
