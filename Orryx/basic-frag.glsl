@@ -22,8 +22,7 @@ void main() {
 
 	vec3 E = normalize(eyeDirection);
 	vec3 R = reflect(-l, n);
-	float d = dot(E, R);
-	float specLight = clamp(d, 0, 1);
+	float specLight = clamp(dot(E, R), 0, 1);
 	
 	vec4 ambientLight = diffuse * ambientColor;
 	vec4 diffuseLight = diffuse * lightColor * dirLight;
