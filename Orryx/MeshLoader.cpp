@@ -6,6 +6,8 @@ namespace orx
 {
     bool MeshLoader::LoadObj(const char* filename, Mesh& destination)
     {
+        Logging::LogInfoFormat("MeshLoader", "Loading mesh at %s...", filename);
+
         std::vector<std::string> lines;
         if (!ParseLines(filename, lines))
         {
@@ -65,8 +67,11 @@ namespace orx
             }
         }
 
+        Logging::LogInfoFormat("MeshLoader", "Finished loading model %s.", filename);
         destination.setVertices(vertices);
         destination.setIndices(indices);
+
+        Logging::LogInfoFormat("MeshLoader", "Calculating mesh normals for %s.", filename);
         destination.calculateNormals();
 
         return true;
@@ -78,6 +83,7 @@ namespace orx
 
         if (!in.is_open())
         {
+            Logging::LogErrorFormat("MeshLoader", "Unable to load mesh in %s.", filename);
             return false;
         }
 

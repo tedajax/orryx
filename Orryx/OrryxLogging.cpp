@@ -3,6 +3,9 @@
 #include <sstream>
 #include <cstdlib>
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 namespace orx
 {
     std::ofstream Logging::s_outFile;
@@ -20,9 +23,39 @@ namespace orx
     void Logging::Log(LogLevel level, const char* context, const char* msg)
     {
         std::stringstream stream;
-        stream << "[" << context << "] " << GetLogLevelString(level) << ": " << msg << std::endl;
+
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        int color;
+        switch (level)
+        {
+            default:
+            case LOG_LEVEL_INFO:
+                color = 7;
+                break;
+
+            case LOG_LEVEL_WARN:
+                color = 0xE;
+                break;
+
+            case LOG_LEVEL_ERROR:
+                color = 0xC;
+                break;
+
+            case LOG_LEVEL_PANIC:
+                color = 0xC + 0xF0;
+                break;
+        }
+        SetConsoleTextAttribute(hConsole, color);
+        
+
+        stream << "[" << context << "] " << GetLogLevelString(level) << ": " << msg << std::endl << std::endl;
         std::cout << stream.str();
         s_outFile << stream.str();
+
+        if (level == LOG_LEVEL_PANIC)
+        {
+            __debugbreak();
+        }
     }
 
     void Logging::LogFormat(LogLevel level, const char* context, const char* format, ...)
