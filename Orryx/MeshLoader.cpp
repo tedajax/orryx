@@ -67,6 +67,7 @@ namespace orx
 
         destination.setVertices(vertices);
         destination.setIndices(indices);
+        destination.calculateNormals();
 
         return true;
     }
